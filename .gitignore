@@ -1,0 +1,11 @@
+node_modules
+
+## Copied Artifacts
+artifacts
+
+## Transpiled Code
+adapter/abis.js
+adapter/bytecodes.js
+adapter/contractNames.js
+adapter/contractMethods.js
+adapter/config.js
