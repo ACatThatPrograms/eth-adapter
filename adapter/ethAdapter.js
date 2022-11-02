@@ -8,6 +8,9 @@ import { ETHEREUM_NETWORK_BY_ID } from './network.js';
 var instanced = false; // Is ethAdapter instanced?
 let ethAdapter = null; // EthAdapter to be instanced
 
+/**
+ * @returns {EthAdapter}
+ */
 export function getEthAdapter() {
     return ethAdapter;
 }
@@ -70,7 +73,7 @@ class EthAdapter {
      * Attempt to connect to a Web3 Wallet from window.ethereum
      * @param { connectToWeb3Wallet~web3ConnectCallBack } web3ConnectCallback - Callback to run after a connection contains err if error
      */
-    async connectToWeb3Wallet(web3ConnectCallback) {
+    async connectToWeb3Wallet(web3ConnectCallback = () => { }) {
         console.log('hit')
         this.connecting = true;
         this.equalize();
@@ -133,7 +136,7 @@ class EthAdapter {
      * @param { Number } index - Index to get from this.accounts
      */
     async getAddressByIndex(index = 0) {
-        let accounts = this.accounts.get();
+        let accounts = this.accounts;
         return accounts.length > 0 ? accounts[index] : 0;
     }
 
