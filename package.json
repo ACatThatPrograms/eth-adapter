@@ -16,6 +16,7 @@
     "redux-class-watcher": "github:ACatThatPrograms/redux-class-watcher"
   },
   "bin": {
-    "ethpst": "./bin/preStartTranspile.js"
+    "ethpst": "./bin/preStartTranspile.js",
+    "ethcfg": "./bin/buildConfig.js"
   }
 }

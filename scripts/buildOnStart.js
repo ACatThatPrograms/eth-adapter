@@ -1,7 +1,6 @@
 import { buildBytecodeFiles } from './buildBytecodeFiles.js';
 import { buildAbiAndContractNameFiles } from './buildAbiAndContractNameFiles.js';
 import { buildMethods } from './buildMethods.js';
-import { buildContractConfig } from './buildContractConfig.js';
 const sleeper = (amt) => ((new Promise(res => setTimeout(res, amt))));
 
 // Es6 Path resolve
@@ -10,7 +9,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function buildOnStart(startRun = false) {
+/**
+ * @param {*} startRun - Is this a run cycle for pre-npm start?
+ * @param {*} suppressCfgMsg - Should we suppress the config runner message?
+ */
+export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
 
     console.log("\n\x1B[33m=====================================")
     console.log("========= TRANSPILER  START =========")
@@ -32,7 +35,8 @@ export async function buildOnStart(startRun = false) {
 
     await sleeper(1500);
     console.log("\x1B[33mBuilding Contract Configuration Files...");
-    await buildContractConfig();
+    let configBuildModule = await import('../scripts/buildContractConfig.js');
+    await configBuildModule.buildContractConfig();
 
     console.log("\x1B[1;35m=====================================")
     console.log("========== TRANSPILER  END ==========")
