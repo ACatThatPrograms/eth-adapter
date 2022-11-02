@@ -50,8 +50,8 @@ class EthAdapter {
         this.networkName = "";
 
         // Static instance state
-        this.equalize = () => {};
-        this.provider = null; // new ethers.providers.JsonRpcProvider(jsonRpcProvider); // Web3 Provider -- Populated on successful _connectToWeb3Wallet()
+        this.equalize = () => { };
+        this.provider = null; // Web3 Provider -- Populated on successful _connectToWeb3Wallet()
         this.signer = null; // Web3 Signer -- Populated on successful _connectToWeb3Wallet()
 
         this.contractMethods = contractFxs;
@@ -62,8 +62,16 @@ class EthAdapter {
      * This function is called anytime notable instance state is updated
      * @param { Function } equalizerFx - Function to be used to be called when notable "this" state is updated
      */
-    async setEqualizeFunction(equalizerFx) {
+    setEqualizeFunction(equalizerFx) {
         this.equalize = equalizerFx;
+    }
+
+    /**
+     * Updates this.provider of EthAdapter so pre-connect RPC requests can be made
+     * @param url - Url to set JSONRpc provider to
+     */
+    setJsonRpcProvider(url) {
+        this.provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
     }
 
     /**
