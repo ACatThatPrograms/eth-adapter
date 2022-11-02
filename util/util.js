@@ -5,10 +5,10 @@
  * @returns 
  */
  export function recurseForObjectKey(obj, keyname) {
-    let foundKeyVals = {};
-    const recurse = (obj) => {
+     let foundKeyVals = {};
+     const recurse = (obj) => {
+        if (!obj) { return {} }
         for (let key of Object.keys(obj)) {
-            if (!obj) { return {} }
             // Found ABI
             if (key === keyname) {
                 foundKeyVals = obj[key];
