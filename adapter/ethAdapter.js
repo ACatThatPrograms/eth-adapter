@@ -6,7 +6,6 @@ import contractFxs from './contractMethods.js';
 import { ETHEREUM_NETWORK_BY_ID } from './network.js';
 
 var instanced = false; // Is ethAdapter instanced?
-let ethAdapter = null; // EthAdapter to be instanced
 
 /**
  * @returns {EthAdapter}
@@ -32,7 +31,7 @@ class EthAdapter {
      * @param {String} jsonRpcProvider - The JSON Rpc Provider to use 
      * @param {Function} equalizeFunction - The class state equalizer function -- Is ran with current instance as first param
      */
-    constructor({ jsonRpcProvider = "", equalizeFunction = (instance) => { } }) {
+    constructor() {
 
         // Prevent multiple-instances
         if (instanced) {
@@ -51,21 +50,19 @@ class EthAdapter {
         this.networkName = "";
 
         // Static instance state
-        this.equalize = equalizeFunction;
-        this.provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider); // Web3 Provider -- Populated on successful _connectToWeb3Wallet()
+        this.equalize = () => {};
+        this.provider = null; // new ethers.providers.JsonRpcProvider(jsonRpcProvider); // Web3 Provider -- Populated on successful _connectToWeb3Wallet()
         this.signer = null; // Web3 Signer -- Populated on successful _connectToWeb3Wallet()
 
         this.contractMethods = contractFxs;
-
-        // Initialization debug printout
-        console.debug("EthAdapter instanced: ", this);
     }
 
     /**
      * Update the function to call when state should be equalized 
-     * @param { Function } equalizerFx - Function to be used to equalize state
+     * This function is called anytime notable instance state is updated
+     * @param { Function } equalizerFx - Function to be used to be called when notable "this" state is updated
      */
-    async _setEqualizeFunction(equalizerFx) {
+    async setEqualizeFunction(equalizerFx) {
         this.equalize = equalizerFx;
     }
 
@@ -74,7 +71,6 @@ class EthAdapter {
      * @param { connectToWeb3Wallet~web3ConnectCallBack } web3ConnectCallback - Callback to run after a connection contains err if error
      */
     async connectToWeb3Wallet(web3ConnectCallback = () => { }) {
-        console.log('hit')
         this.connecting = true;
         this.equalize();
         if (!window.ethereum) {
@@ -223,7 +219,7 @@ class EthAdapter {
         return await this.signer.signMessage(message);
     }
 
-    /** Signs the bytes of message with this.signer -- Useful for signing hashes 
+    /** Signs the bytes of message with this.signer.signMessage -- Useful for signing hashes 
      * @param {String} message - The string to sign
      * @returns { String } -- Signed message
      */
@@ -270,7 +266,5 @@ class EthAdapter {
 
 }
 
-export function startEthAdapter({ jsonRpcProvider, equalizeFunction }) {
-    ethAdapter = new EthAdapter({ jsonRpcProvider: jsonRpcProvider });
-    return ethAdapter;
-}
+const ethAdapter = new EthAdapter();
+export default ethAdapter;

@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
  */
 export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
 
-    console.log("\n\x1B[33m=====================================")
+    console.log("\x1B[33m=====================================")
     console.log("========= TRANSPILER  START =========")
     console.log("=====================================\x1B[0m")
 
