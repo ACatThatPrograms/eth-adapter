@@ -25,9 +25,10 @@ export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
     console.log("Transpiling ABI and Contract names to ES6 Syntax...\n");
     const ABIS = await buildAbiAndContractNameFiles();
 
-    await sleeper(1500);
-    console.log("\x1B[33mTranspiling Bytecodes to ES6 Syntax...\n");
-    await buildBytecodeFiles();
+    // TODO: Make conditional and include create2() address returns from using bytecode
+    // await sleeper(1500);
+    // console.log("\x1B[33mTranspiling Bytecodes to ES6 Syntax...\n");
+    // await buildBytecodeFiles();
 
     await sleeper(1500);
     console.log("\x1B[33mExtracting Methods from Transpiled Contract Configuration...")
