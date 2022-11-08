@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 
 // Es6 Path resolve
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -10,19 +10,14 @@ const __dirname = path.dirname(__filename);
  * Builds all web3 methods per web3 contract
  * @param {String} ABIS Contract ABI JSON to build methods from 
  */
-export async function buildMethods (ABIS) {
-
-    const createContractOutline = (contractName) => ({
-        name: contractName,
-        methods: []
-    })
+export async function buildMethods(ABIS) {
 
     const createFunctionString = ({ contractName, name, inputs, outputs, stateMutability, type }) => {
 
         let fx = ``;
 
         // Don't try to parse skipTypes
-        const skipTypes = ['constructor', 'error', 'event', 'fallback']
+        const skipTypes = ['constructor', 'error', 'event', 'fallback', 'receive']
         if (skipTypes.indexOf(type) !== -1) {
             return [fx, ""];
         }
@@ -153,7 +148,7 @@ export async function buildMethods (ABIS) {
 
         for (let i = 0; i < functionNamesArray.length; i++) {
             let fName = functionNamesArray[i];
-            output += `\t\t${(fName.replace(cName + "_function_", "")).replace(/_IN.*/, "")}:${fName}`
+            output += `\t\t${(fName.replace(cName + "_function_", ""))}:${fName}`
             if (i !== functionNamesArray.length - 1) {
                 output += ',\n'
             }
