@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 
 // Es6 Path resolve
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -10,26 +10,30 @@ const __dirname = path.dirname(__filename);
  * Builds all web3 methods per web3 contract
  * @param {String} ABIS Contract ABI JSON to build methods from 
  */
-export async function buildMethods (ABIS) {
-
-    const createContractOutline = (contractName) => ({
-        name: contractName,
-        methods: []
-    })
+export async function buildMethods(ABIS) {
 
     const createFunctionString = ({ contractName, name, inputs, outputs, stateMutability, type }) => {
 
         let fx = ``;
 
         // Don't try to parse skipTypes
-        const skipTypes = ['constructor', 'error', 'event', 'fallback']
+        const skipTypes = ['constructor', 'error', 'event', 'fallback', 'receive']
         if (skipTypes.indexOf(type) !== -1) {
             return [fx, ""];
         }
 
         let fxName = `${contractName}_${type}_${name}_${stateMutability}_IN${inputs.length}_OUT${outputs.length}`
 
-        fx += `export async function ${fxName}(`
+        fx += `async function ${fxName}(`
+
+        let paramRepeatCount = 1;
+        const extractInputName = (inputName) => {
+            return !inputName ? ( () => {
+                let name = "nameMissing" + "_" + paramRepeatCount; 
+                paramRepeatCount++;
+                return name;
+            })() : inputName;
+        }
 
         // Construct deconstructable function parameters
         if (inputs.length > 0) {
@@ -37,31 +41,46 @@ export async function buildMethods (ABIS) {
         }
         for (let i = 0; i < inputs.length; i++) {
             let input = inputs[i];
-            // Replace any invalid JS Chars with text
-            input.type = input.type.replace("[]", "Array")
-            // Add fx params
-            fx += `${input.name}_${input.type}`
+            fx += `${extractInputName(input.name)}` // Use solidityType_paramName as layout for parameters
             if (i !== inputs.length - 1) { fx += ', '; } // Comma for each param 
         }
         if (inputs.length > 0) {
             fx += `}`
         }
-        // Close parameters and break into function body
-        fx += `) {\n`
+        // Finish parameters and break into type declaration
+        // Make sure to reset param repeat count for correct naming
+        paramRepeatCount = 1;
+        if (inputs.length > 0) {
+            fx += `:{`
+        }
+        for (let i = 0; i < inputs.length; i++) {
+            let input = inputs[i];
+            // Replace any invalid JS Chars with text
+            input.type = input.type.replace("[]", "array")
+            // Add fx params -- Use same param name structure from above
+            fx += `${extractInputName(input.name)}:types.${input.type}` // Use solidity type as type
+            if (i !== inputs.length - 1) { fx += ', '; } // Comma for each param 
+        }
+        if (inputs.length > 0) {
+            fx += `}`
+        }
+        // Close type declarations and break into function body
+        fx += `):Promise<types.ContractMethodResponse> {\n`
         //Add the function opener for corresponding contract type getter
         fx += `\ttry {\n`
         // Get the contract instance 
         let contractCallerString = stateMutability === 'view' ?
-            `getEthAdapter()._getReadonlyContractInstance("${contractName}")`
-            : `getEthAdapter()._getSignerContractInstance("${contractName}")`
+            `ethAdapter._getReadonlyContractInstance("${contractName}")`
+            : `ethAdapter._getSignerContractInstance("${contractName}")`
 
         fx += `\t\tlet contractInstance = ${contractCallerString};`;
         fx += `\n\t\tconst response = await contractInstance["${name}"](`
-        // Add inputs to call
+        // Add inputs to call -- Again reset paramrepeatercount
+        paramRepeatCount = 1;
         for (let i = 0; i < inputs.length; i++) {
             let input = inputs[i];
             // if (input.name === "contractInstance") { continue } // Skip shimmed input
-            fx += `${input.name}_${input.type}`
+            fx += `${extractInputName(input.name)}`
             if (i !== inputs.length - 1) { fx += ', '; } // Comma for each param 
         }
         // Close params
@@ -71,7 +90,7 @@ export async function buildMethods (ABIS) {
         // Add closures
         fx += `\n\t}`
         // Add catch
-        fx += ` catch(ex) { \n\t\treturn { error: ex.message }\n\t}`
+        fx += ` catch(ex) { \n\t\treturn { error: ex.message, response: null }\n\t}`
         // Add final closure
         fx += `\n}\n`
 
@@ -130,16 +149,13 @@ export async function buildMethods (ABIS) {
     // Setup final default export
     let output = ''
 
-    // Add import ethHandler
-    output += `import { getEthAdapter } from './ethAdapter.js';\n\n`
-
     // Add Methods
     for (let i = 0; i < contractMethodStrings.length; i++) {
         output += contractMethodStrings[i];
     }
 
     // Add methods object opener
-    output += `const contractMethods = {`;
+    output += `export const contractMethods = {`;
 
     // Go through each contract and get the functions for exporting
     for (let i = 0; i < Object.keys(contractFxNamesForContract).length; i++) {
@@ -153,7 +169,7 @@ export async function buildMethods (ABIS) {
 
         for (let i = 0; i < functionNamesArray.length; i++) {
             let fName = functionNamesArray[i];
-            output += `\t\t${(fName.replace(cName + "_function_", "")).replace(/_IN.*/, "")}:${fName}`
+            output += `\t\t${(fName.replace(cName + "_function_", ""))}:${fName}`
             if (i !== functionNamesArray.length - 1) {
                 output += ',\n'
             }
@@ -171,13 +187,20 @@ export async function buildMethods (ABIS) {
 
     // Add final object closure
     output += `\n}`
+    // Add ethAdapter instance contractMethods assignment
+    output += `\nethAdapter.contractMethods = contractMethods;`
 
-    // Add default export
+    // Read and re-write ethHandler.ts w/ generated functions
+    let ethAdapter = (await fs.readFile(__dirname + '/../src/adapter/ethAdapter.ts')).toString();
 
-    output += `\n\nexport default contractMethods;`
+    // Replace entry string with generated methods
+    output = ethAdapter.replace(`// !! GENERATED FUNCTIONS BELOW HERE`, output)
+    // Replace the contractsMethods typing with the contractMethods typeof
+    output = output.replace(`contractMethods: object;`, "contractMethods: typeof contractMethods");
+    
+    // Write it
+    await fs.writeFile(__dirname + '/../src/adapter/customEthAdapter.ts', output, "utf8");
 
-    await fs.writeFile(__dirname + '/../adapter/contractMethods.js', output, "utf8");
-
-    console.log(`\n\x1B[0;32mFunctions Successfully Parsed to ES6 Syntax in ${__dirname}/../adapter/contractMethods.js\n\x1B[0m`);
+    console.log(`\n\x1B[0;32mFunctions Successfully Parsed to ES6 Syntax in ${__dirname}/../src/adapter/customEthAdapter.ts\n\x1B[0m`);
 
 }

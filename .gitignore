@@ -1,11 +1,17 @@
 node_modules
+yarn-error.log
 
 ## Copied Artifacts
 artifacts
 
 ## Transpiled Code
-adapter/abis.js
-adapter/bytecodes.js
-adapter/contractNames.js
-adapter/contractMethods.js
-adapter/config.js
+src/adapter/abis.ts
+src/adapter/bytecodes.ts
+src/adapter/contractNames.ts
+src/adapter/customEthAdapter.ts
+src/adapter/config.ts
+scripts/_abis.js
+scripts/_contractNames.js
+
+## Created dist
+dist

@@ -2,18 +2,27 @@
   "name": "eth-adapter",
   "version": "1.0.0",
   "description": "An ethereum adapter/transpiler to make interacting wirth smart contracts wicked simple",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
+    "build-dist": "rollup -c",
+    "develop": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "transpile-artifacts": ""
   },
   "author": "ACatThatPrograms",
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^18.11.9",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
-    "redux-class-watcher": "github:ACatThatPrograms/redux-class-watcher"
+    "rollup": "^3.2.5",
+    "rollup-plugin-cleanup": "^3.2.1",
+    "rollup-plugin-dts": "^5.0.0",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.8.4"
   },
   "bin": {
     "ethpst": "./bin/preStartTranspile.js"

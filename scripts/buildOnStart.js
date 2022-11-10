@@ -1,7 +1,7 @@
-import { buildBytecodeFiles } from './buildBytecodeFiles.js';
+// import { buildBytecodeFiles } from './buildBytecodeFiles.js';
 import { buildAbiAndContractNameFiles } from './buildAbiAndContractNameFiles.js';
 import { buildMethods } from './buildMethods.js';
-import { buildContractConfig } from './buildContractConfig.js';
+import { distMaker } from './createDist.js';
 const sleeper = (amt) => ((new Promise(res => setTimeout(res, amt))));
 
 // Es6 Path resolve
@@ -10,9 +10,13 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function buildOnStart(startRun = false) {
+/**
+ * @param {*} startRun - Is this a run cycle for pre-npm start?
+ * @param {*} suppressCfgMsg - Should we suppress the config runner message?
+ */
+export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
 
-    console.log("\n\x1B[33m=====================================")
+    console.log("\x1B[33m=====================================")
     console.log("========= TRANSPILER  START =========")
     console.log("=====================================\x1B[0m")
 
@@ -22,9 +26,10 @@ export async function buildOnStart(startRun = false) {
     console.log("Transpiling ABI and Contract names to ES6 Syntax...\n");
     const ABIS = await buildAbiAndContractNameFiles();
 
-    await sleeper(1500);
-    console.log("\x1B[33mTranspiling Bytecodes to ES6 Syntax...\n");
-    await buildBytecodeFiles();
+    // TODO: Make conditional and include create2() address returns from using bytecode
+    // await sleeper(1500);
+    // console.log("\x1B[33mTranspiling Bytecodes to ES6 Syntax...\n");
+    // await buildBytecodeFiles();
 
     await sleeper(1500);
     console.log("\x1B[33mExtracting Methods from Transpiled Contract Configuration...")
@@ -32,7 +37,18 @@ export async function buildOnStart(startRun = false) {
 
     await sleeper(1500);
     console.log("\x1B[33mBuilding Contract Configuration Files...");
-    await buildContractConfig();
+    let configBuildModule = await import('../scripts/buildContractConfig.js');
+    await configBuildModule.buildContractConfig();
+
+    await sleeper(1500);
+    console.log("\x1B[33mBuilding eth-adapter /dist...\n");
+    let distRes = await distMaker();
+
+    if (!!distRes.error) {
+        console.log("\x1B[31mError creating dist");
+        console.log(distRes.error)
+        return distRes.child.kill()
+    }
 
     console.log("\x1B[1;35m=====================================")
     console.log("========== TRANSPILER  END ==========")
@@ -40,7 +56,7 @@ export async function buildOnStart(startRun = false) {
 
     if (process.argv[2] === "startRun" || startRun) {
         await sleeper(1500);
-        console.log("Resuming start up...\n")
+        console.log("Resuming ...\n")
         await sleeper(1250)
     }
 

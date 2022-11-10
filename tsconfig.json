@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "removeComments": false,
+      "sourceMap": true,
+      "target": "es2018",
+      "outDir": "./dist",
+      "declaration": true,
+      "strict": false,
+      "module": "ESNext",
+      "noEmitOnError": true,
+      "lib": ["es2017", "DOM"],
+      "esModuleInterop": false,
+    },
+    "include": ["src"],
+    "exclude": ["src/adapter/ethAdapter.ts"],
+  }

@@ -1,6 +1,6 @@
 // Grab ES6 compiled ABIs, and contract names
-import abis from '../adapter/abis.js';
-import contractNames from '../adapter/contractNames.js';
+import abis from './_abis.js';
+import contractNames from './_contractNames.js';
 
 import fs from 'fs/promises';
 
@@ -23,7 +23,7 @@ export async function buildContractConfig() {
     for (let environmentKey of Object.keys(process.env)) {
         // Only parse _CONTRACT_ADDRESS keys for the contract names
         if (environmentKey.indexOf("CONTRACT_ADDRESS") !== -1) {
-            let contractName = environmentKey.replace("_CONTRACT_ADDRESS", "").replace("CONTRACT_ADDRESS", "").replace("REACT_APP__", "").toUpperCase();
+            let contractName = environmentKey.replace("_CONTRACT_ADDRESS", "").replace("CONTRACT_ADDRESS", "").replace("REACT_APP__", "").replace("REACT_APP_", "").toUpperCase();
             CONTRACT_NAMES[contractName] = contractName;
             CONTRACT_ADDRESSES[contractName] = process.env[environmentKey];
             CONTRACT_ABIS[contractName] = JSON.parse(abis[contractName]);
@@ -37,6 +37,6 @@ export async function buildContractConfig() {
     // Construct ES6 syntax config
     let output = `const CONTRACT_CONFIG = ${JSON.stringify(CONTRACTS)};`;
     output += `\nexport default CONTRACT_CONFIG;`;
-    await fs.writeFile(__dirname + '/../adapter/config.js', output, "utf8");
-    console.log(`\n\x1B[0;32mContract Config Successfully Parsed to ES6 Syntax in ${__dirname}/../adapter/config.js\n\x1B[0m`);
+    await fs.writeFile(__dirname + '/../src/adapter/config.ts', output, "utf8");
+    console.log(`\n\x1B[0;32mContract Config Successfully Parsed to ES6 Syntax in ${__dirname}/../src/adapter/config.ts\n\x1B[0m`);
 }

@@ -3,7 +3,7 @@ import { recurseForObjectKey } from '../util/util.js';
 
 // Es6 Path resolve
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,7 +26,7 @@ export async function buildBytecodeFiles(arg) {
     }
 
     const es6Export = "const bytecodes = " + JSON.stringify(byteCodes) + "\nexport default bytecodes;";
-    await fs.writeFile(__dirname + '/../adapter/bytecodes.js', es6Export, "utf8");
+    await fs.writeFile(__dirname + '/../src/adapter/bytecodes.js', es6Export, "utf8");
 
     console.log(`\x1B[0;32mBytecodes Successfully Parsed to ES6 Syntax in ${__dirname}/../adapter/bytecodes.js\n\x1B[0m`);
 

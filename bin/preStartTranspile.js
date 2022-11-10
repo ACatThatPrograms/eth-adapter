@@ -4,4 +4,4 @@ import { buildOnStart } from "../scripts/buildOnStart.js";
 
 // Setup .env & run buildOnStart()
 dotenv.config();
-buildOnStart(true);
+buildOnStart(true, false);
