@@ -16,8 +16,6 @@ export async function buildAbiAndContractNameFiles(arg) {
 
     const AbiFiles = await fs.readdir('./artifacts/');
 
-
-
     const ABIS = {};
     const CONTRACT_NAMES = {};
 
@@ -50,13 +48,16 @@ export async function buildAbiAndContractNameFiles(arg) {
         })
     }
 
+    // Write Names && ABIS locally for use in scrips as JS as well
     const AbiES6Export = "const abis = " + JSON.stringify(ABIS) + "\nexport default abis;";
-    await fs.writeFile(__dirname + '/../adapter/abis.js', AbiES6Export, "utf8");
+    await fs.writeFile(__dirname + '/../src/adapter/abis.ts', AbiES6Export, "utf8");
+    await fs.writeFile(__dirname + '/_abis.js', AbiES6Export, "utf8");
 
     const contractNamesES6 = "const CONTRACT_NAMES = " + JSON.stringify(CONTRACT_NAMES) + "\nexport default CONTRACT_NAMES;";
-    await fs.writeFile(__dirname + '/../adapter/contractNames.js', contractNamesES6, "utf8");
+    await fs.writeFile(__dirname + '/../src/adapter/contractNames.ts', contractNamesES6, "utf8");
+    await fs.writeFile(__dirname + '/_contractNames.js', contractNamesES6, "utf8");
 
-    console.log(`\x1B[0;32mABIs and CONTRACT_NAMES Successfully Parsed to ES6 Syntax in ${__dirname}/../adapter/contract_names.js\n\x1B[0m`);
+    console.log(`\x1B[0;32mABIs and CONTRACT_NAMES Successfully Parsed to ES6 Syntax in ${__dirname}/../src/adapter/contract_names.ts\n\x1B[0m`);
 
     return ABIS;
 

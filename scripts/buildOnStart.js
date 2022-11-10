@@ -1,6 +1,7 @@
-import { buildBytecodeFiles } from './buildBytecodeFiles.js';
+// import { buildBytecodeFiles } from './buildBytecodeFiles.js';
 import { buildAbiAndContractNameFiles } from './buildAbiAndContractNameFiles.js';
 import { buildMethods } from './buildMethods.js';
+import { distMaker } from './createDist.js';
 const sleeper = (amt) => ((new Promise(res => setTimeout(res, amt))));
 
 // Es6 Path resolve
@@ -39,13 +40,23 @@ export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
     let configBuildModule = await import('../scripts/buildContractConfig.js');
     await configBuildModule.buildContractConfig();
 
+    await sleeper(1500);
+    console.log("\x1B[33mBuilding eth-adapter /dist...\n");
+    let distRes = await distMaker();
+
+    if (!!distRes.error) {
+        console.log("\x1B[31mError creating dist");
+        console.log(distRes.error)
+        return distRes.child.kill()
+    }
+
     console.log("\x1B[1;35m=====================================")
     console.log("========== TRANSPILER  END ==========")
     console.log("=====================================\x1B[0m\n")
 
     if (process.argv[2] === "startRun" || startRun) {
         await sleeper(1500);
-        console.log("Resuming start up...\n")
+        console.log("Resuming ...\n")
         await sleeper(1250)
     }
 
