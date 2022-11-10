@@ -1,4 +1,4 @@
-# eth-adaper :electric-plug:
+# eth-adaper :electric_plug:
 
 Ethereum development made easier, interact with smart contracts instantly.
 
@@ -46,7 +46,7 @@ If the above looks pleasing, this library is for you.
 
 **Install/USE YARN**
 
-Due to npx's weirdness around 'cwd', yarn has been kinder to this somewhat odd transpiling process. To use this package you will need yarn for now until I dive back int and see what I can do on supporting npx.
+Due to npx's weirdness around 'cwd', yarn has been kinder to this somewhat odd transpiling process. To use this package you will need yarn for now until I dive back in and see what I can do on supporting npx. My apologies for the inconvenience and I welcome a PR on it.
 
 ### The rest of the steps:
 
@@ -68,7 +68,7 @@ Due to npx's weirdness around 'cwd', yarn has been kinder to this somewhat odd t
         "eject": "react-scripts eject" // Not needed here
     }
   ```
-  5. The Ethereum Pre-Start-Transpiler (ethpst) should be ran anytime changed to the contract abi's are made.
+  5. The Ethereum Pre-Start-Transpiler (ethpst) should be ran anytime changes to the contract abi's are made.
 
 ## Calling Contracts :incoming_envelope:	
 
