@@ -8,7 +8,7 @@ import { ETHEREUM_NETWORK_BY_ID } from "./network";
 import { ethers, Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import CONTRACT_CONFIGURATION from "./config";
-import * as types from '../../@types';
+import * as types from "../../@types";
 
 // Allow window.ethereum
 declare global {
@@ -35,6 +35,8 @@ class EthAdapter {
     contractConfig: object;
     contractMethods: object;
     ethers: typeof ethers;
+    onNetworkChange: (networkId: number) => void = () => {};
+    onAccountChange: (activeAccount: string) => void = () => {};
     equalize: Function;
     networkId: string;
     networkName: string;
@@ -62,12 +64,13 @@ class EthAdapter {
 
         // Static instance state
         this.ethers = ethers; // ethers.js passthrough
-        this.equalize = () => { };
+        this.equalize = () => {};
+        this.onNetworkChange = (networkId: number) => {};
+        this.onAccountChange = (activeAccount: string) => {};
         this.provider = null; // Web3 Provider -- Populated on successful _connectToWeb3Wallet()
         this.signer = null; // Web3 Signer -- Populated on successful _connectToWeb3Wallet()
 
         this.contractMethods = null;
-
     }
 
     /**
@@ -77,6 +80,17 @@ class EthAdapter {
      */
     setEqualizeFunction(equalizerFx: Function) {
         this.equalize = equalizerFx;
+    }
+
+    /**
+     * Used to set the function call after a network change has taken place
+     */
+    setOnNetworkChangeFunction(onNetworkFunction = (networkId: number) => {}) {
+        this.onNetworkChange = onNetworkFunction;
+    }
+
+    setOnAccountChangeFunction(onAccountChangeFunction = (activeAccount: string) => {}) {
+        this.onAccountChange = onAccountChangeFunction;
     }
 
     /**
@@ -129,6 +143,7 @@ class EthAdapter {
                 this.networkName = ETHEREUM_NETWORK_BY_ID[networkId];
                 await this.updateEthereumBalance();
                 this.equalize();
+                this.onNetworkChange(networkId);
             });
             window.ethereum.on("accountsChanged", async (accounts) => {
                 this.accounts = accounts;
@@ -136,6 +151,7 @@ class EthAdapter {
                 this.connectedAccount = address;
                 await this.updateEthereumBalance();
                 this.equalize();
+                this.onAccountChange(address);
             });
         } else {
             console.warn("No web3 detected."); // TODO: Add fallback
