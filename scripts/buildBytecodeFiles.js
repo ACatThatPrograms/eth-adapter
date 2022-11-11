@@ -28,6 +28,6 @@ export async function buildBytecodeFiles(arg) {
     const es6Export = "const bytecodes = " + JSON.stringify(byteCodes) + "\nexport default bytecodes;";
     await fs.writeFile(__dirname + '/../src/adapter/bytecodes.js', es6Export, "utf8");
 
-    console.log(`\x1B[0;32mBytecodes Successfully Parsed to ES6 Syntax in ${__dirname}/../adapter/bytecodes.js\n\x1B[0m`);
+    console.log(`\x1B[0;32mBytecodes Successfully Parsed to ES6 Syntax in ${path.resolve(__dirname + /../adapter/bytecodes.js)}\n\x1B[0m`);
 
 }

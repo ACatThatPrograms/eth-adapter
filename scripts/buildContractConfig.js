@@ -38,5 +38,5 @@ export async function buildContractConfig() {
     let output = `const CONTRACT_CONFIG = ${JSON.stringify(CONTRACTS)};`;
     output += `\nexport default CONTRACT_CONFIG;`;
     await fs.writeFile(__dirname + '/../src/adapter/config.ts', output, "utf8");
-    console.log(`\n\x1B[0;32mContract Config Successfully Parsed to ES6 Syntax in ${__dirname}/../src/adapter/config.ts\n\x1B[0m`);
+    console.log(`\n\x1B[0;32mContract Config Successfully Parsed to ES6 Syntax in ${path.resolve(__dirname + '/../src/adapter/config.ts')}\n\x1B[0m`);
 }

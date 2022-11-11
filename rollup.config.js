@@ -11,22 +11,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const config = [
-  {
-    input: path.resolve(__dirname + '/src/index.ts'),
-    output: {
-      file: path.resolve(__dirname + '/dist/index.js'),
-      format: 'es',
-      sourcemap: true,
-    },
-    external: ['ethers'],
-    plugins: [nodeResolve(), typescript({tsconfig: path.resolve(__dirname) + '/tsconfig.json'})],
-  }, {
-    input: path.resolve(__dirname + '/dist/src/index.d.ts'),
-    output: {
-      file: path.resolve(__dirname + '/dist/index.d.ts'),
-      format: 'es'
-    },
-    plugins: [nodeResolve(), dts()]
-  }
+    {
+        input: path.resolve(__dirname + '/src/index.ts'),
+        output: {
+            file: path.resolve(__dirname + '/dist/index.js'),
+            format: 'es',
+            sourcemap: true,
+        },
+        external: ['ethers'],
+        plugins: [nodeResolve(), typescript({ tsconfig: path.resolve(__dirname) + '/tsconfig.json' })],
+    }
 ];
 export default config;
