@@ -65,7 +65,7 @@ export async function buildMethods(ABIS) {
             fx += `}`
         }
         // Close type declarations and break into function body
-        fx += `):Promise<types.ContractMethodResponse> {\n`
+        fx += `):Promise<${stateMutability === 'view' ? "types.ContractReadMethodResponse" : "types.ContractWriteMethodResponse"}> {\n`
         //Add the function opener for corresponding contract type getter
         fx += `\ttry {\n`
         // Get the contract instance 
@@ -90,7 +90,7 @@ export async function buildMethods(ABIS) {
         // Add closures
         fx += `\n\t}`
         // Add catch
-        fx += ` catch(ex) { \n\t\treturn { error: ex.message, response: null }\n\t}`
+        fx += ` catch(ex) { \n\t\treturn { error: ex.message }\n\t}`
         // Add final closure
         fx += `\n}\n`
 

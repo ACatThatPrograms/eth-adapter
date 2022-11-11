@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { TransactionResponse } from "@ethersproject/abstract-provider/lib/index";
 
 export type uint8 = string | number;
 export type uint16 = string | number;
@@ -17,7 +17,12 @@ export type bytes16 = string | number;
 export type bytes32 = string;
 export type bytesarray = string[];
 
-export type ContractMethodResponse = {
+export type ContractReadMethodResponse = {
     error: string | boolean,
-    response:  string | number | BigNumber | boolean,
 }
+
+interface ContractWriteError {
+    error: string
+}
+
+export type ContractWriteMethodResponse = TransactionResponse | ContractWriteError;
