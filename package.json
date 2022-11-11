@@ -1,12 +1,12 @@
 {
   "name": "eth-adapter",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "An ethereum adapter/transpiler to make interacting wirth smart contracts wicked simple",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build-dist": "rollup -c",
+    "build": "rollup -c",
     "develop": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "transpile-artifacts": ""
@@ -14,6 +14,8 @@
   "author": "ACatThatPrograms",
   "license": "MIT",
   "dependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^9.0.2",
     "@types/node": "^18.11.9",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",

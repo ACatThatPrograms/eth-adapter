@@ -47,8 +47,10 @@ export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
     if (!!distRes.error) {
         console.log("\x1B[31mError creating dist");
         console.log(distRes.error)
-        return distRes.child.kill()
+        return
     }
+
+    console.log(`\n\x1B[0;32mDist Successfully Created at *eth-adapter/dist/index.js\n\x1B[0m`);
 
     console.log("\x1B[1;35m=====================================")
     console.log("========== TRANSPILER  END ==========")

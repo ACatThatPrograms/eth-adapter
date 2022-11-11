@@ -1,37 +1,37 @@
-import { spawn } from 'child_process';
+import { rollup } from 'rollup';
+import { loadConfigFile } from 'rollup/loadConfigFile'
+
+// Es6 Path resolve
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const distMaker = async () => {
     return new Promise(res => {
-
-        let distChild = spawn('bash');
-
-        distChild.stdout.on("data", (data) => {
-            if (data.indexOf("Done in") !== -1) {
-                res({error: false});
-                console.log(`\x1B[0;32mDist Successfully Created at *eth-adapter/dist/index.js\n\x1B[0m`);
-                distChild.kill();
-            } else {
-                console.log(data.toString());
-            }
-        })
-
-        const errResp = (err) => {
-            console.log(err.toString());
-            err = err.toString();
-            res({ error: err, child: distChild })
+        try {
+            build();
+        } catch (ex) {
+            return res({ error: ex.message })
         }
+        async function build() {
+            loadConfigFile(path.resolve(__dirname + '/../rollup.config.js'), { format: 'es' }).then(
+                async ({ options, warnings }) => {
+                    // console.log(options, warnings)
+                    // Set output based on env
+                    if (process.env.ETH_ADAPTER_USE_CJS === "TRUE") {
+                        options[0].output = "cjs";
+                    }
+                    console.log(`We currently have ${warnings.count} warnings`);
+                    warnings.flush();
+                    for (const optionsObj of options) {
+                        const bundle = await rollup(optionsObj);
+                        await Promise.all(optionsObj.output.map(bundle.write));
+                    }
+                    res(true);
+                }
+            );
 
-        distChild.stdout.on("error", errResp)
-
-        distChild.stderr.on("data", (data) => {
-            console.log(data.toString());
-        })
-
-        distChild.stderr.on("error", errResp)
-
-        distChild.stdin.write('cd node_modules\n');
-        distChild.stdin.write('cd eth-adapter\n');
-        distChild.stdin.write('yarn build-dist\n');
+        }
     })
 }
-
