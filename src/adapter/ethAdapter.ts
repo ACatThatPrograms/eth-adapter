@@ -71,6 +71,7 @@ class EthAdapter {
         this.signer = null; // Web3 Signer -- Populated on successful _connectToWeb3Wallet()
 
         this.contractMethods = null;
+        this.contractConfig = CONTRACT_CONFIGURATION;
     }
 
     /**
