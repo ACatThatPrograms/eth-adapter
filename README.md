@@ -8,7 +8,7 @@ Ethereum development made easier, interact with smart contracts instantly.
 - Reduce complexity around how to interact with smart contracts.
 - Provided typed parameters are pre-generated functions based on your ABI:
 
-![auto_complete_demo](https://github.com/ACatThatPrograms/eth-adapter/tree/main/readme_img/auto_complete.png)
+![auto_complete_demo](https://raw.githubusercontent.com/ACatThatPrograms/eth-adapter/main/readme_img/auto_complete.png)
 #### Additionally: 
 - Exposes ethers on `ethAdapter.ethers` if you need it
 - Exposes all loaded contract configuration under `ethAdapter.contractConfig`
