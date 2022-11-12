@@ -6,13 +6,12 @@ Ethereum development made easier, interact with smart contracts instantly.
 
 - Reduce need for writing complex wrapper functions to call `ethers.js` or `web3.js`
 - Reduce complexity around how to interact with smart contracts.
-- Provided typed parameters are pre-generated functions based on your ABI:
+- Provided typed parameters for the generated functions based on your ABI:
 
 ![auto_complete_demo](https://raw.githubusercontent.com/ACatThatPrograms/eth-adapter/main/readme_img/auto_complete.png)
 #### Additionally: 
 - Exposes ethers on `ethAdapter.ethers` if you need it
 - Exposes all loaded contract configuration under `ethAdapter.contractConfig`
-
 
 # About :grey_question:	
 
@@ -24,7 +23,7 @@ Would you like to interact with smartcontracts like this:
 // If you want to use metamask / injected web3
 await ethAdapter.connectToWeb3Wallet();
 
-// Or use a JSON Rpc Provider
+// OR, just use a JSON Rpc Provider
 ethAdapter.setJsonRpcProvider() // Used by default if you don't use connectToWeb3Wallet()
 
 let storedInt = await ethAdapter.contractMethods.STORAGE.retrieve_view_IN0_OUT1();
@@ -35,20 +34,21 @@ if (storedInt.error) {
 // Else... you have storedInt now, conquer the world!
 ```
 
-If the above looks pleasing, this library is for you.
+If the above looks pleasing, this library is for you!
 
 # How do I use it? :wrench:
 
 ## Setup :sewing_needle:	
 
-1. Compile a contract and get those artifact files as a `.json` file, ours is `Storage.json`
-2. Drop them in your project in a new root `/artifacts` folder
+1. `npm install eth-adapter` | `yarn add eth-adapter`
+2. Compile a contract and get those artifact files as a `.json` file, ours is `Storage.json`
+3. Drop them in your project in a new root `/artifacts` folder
    - Take note of the names, they're important. We have a **Storage.json** for example
-3. Create a .env file and add your contract with an address
+4. Create a .env file and add your contract with an address
    `CONTRACT_ADDRESS_STORAGE=0x0`
    - If you use React, the library will also parse REACT_APP_ environment keys
    - The name should be uppercased here without the .json so **STORAGE**
-4. Run 'ethpst' a bin provided by this library 
+5. Run 'ethpst' a bin provided by this library 
     - For React projects it is advised to edit start/build/test to have `ethpst;` preceed them:
   ```
       "scripts": {
@@ -58,17 +58,19 @@ If the above looks pleasing, this library is for you.
         "eject": "react-scripts eject" // Not needed here
     }
   ```
-  5. The Ethereum Pre-Start-Transpiler (ethpst) should be ran anytime changes to the contract abi's are made.
+  - The _Ethereum Pre-Start-Transpiler_ (ethpst) should be ran anytime the abi's are updated
+
+### For CJS / ES5 compile:
 
 If you wish to use this inside node as ES5 and not ES6 modules, you can compile to cjs by including the following .env parameter in your project root:
 
 `ETH_ADAPTER_USE_CJS="TRUE"`
 
-* A false .env does not need to be included for ES6 Module compiling, it is the default.
+* A false .env does not need to be included for ES6 Module compiling, it is the default
 
 ## Calling Contracts :incoming_envelope:	
 
-This is the easy part
+This is the easy part:
 
 ```
 // Import ethAdapter
@@ -78,21 +80,21 @@ import ethAdapter from 'eth-adapter`
 ethAdapter.setJsonRpcProvider("https://localhost:8545); 
 
 // All methods are available on ethAdapter.contractMethods broken down by 'CONTRACTNAME' and have generated types for IntelliSense friendliness
-let storedInt = ethAdapter.contractMethods.STORAGE.retrieve_view_IN0_OUT1();
+let storedInt = await ethAdapter.contractMethods.STORAGE.retrieve_view_IN0_OUT1();
 ```
 
 Remember:
 
 - Parameters for contract methods must be passed as destructured objects as `{paramName:value}`
-- Additionally functions are named with IN/OUT counts to provide access to overloaded functions
+- Functions are named with IN/OUT counts to provide access to overloaded functions
 
 ## More Functionality :gear:	
 
-EthAdapter has some inbuilts for basic things, and also gives you direct access to ethers if you need it through `ethAdapter.ethers`
+EthAdapter has some inbuilts for basic things, but also gives you direct access to ethers if you need it through `ethAdapter.ethers`
+
+EthAdapter exposes all of the compiled contract configuration at `ethAdapter.contractConfig` this allows you to get the compiled information on your contract within the context ethAdapter sits in.
 
 ### Additional Methods
-
-These are currently quite alpha and used primarily internal of the adapter, however are available if needed
 
 ### **setOnNetworkChangeFunction(onNetworkFunction = (networkId: number) => {})**
 
@@ -120,7 +122,7 @@ Get the address by index for the connected provider
 
 #### **updateEthereumBalance(accountIdx: int)** 
 
-Updates the ethAdapter.balances state with the latest ETH balance for a given address
+Updates the ethAdapter.balances state with the latest ETH balance for a connected address
 
 #### **signSimpleStringMsg(msg: string)**
 
