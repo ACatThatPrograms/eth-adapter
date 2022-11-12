@@ -6,7 +6,13 @@ Ethereum development made easier, interact with smart contracts instantly.
 
 - Reduce need for writing complex wrapper functions to call `ethers.js` or `web3.js`
 - Reduce complexity around how to interact with smart contracts.
-- Provided typed parameters are pre-generated functions based on your ABI
+- Provided typed parameters are pre-generated functions based on your ABI:
+
+![auto_complete_demo](https://github.com/ACatThatPrograms/eth-adapter/tree/main/readme_img/auto_complete.png)
+#### Additionally: 
+- Exposes ethers on `ethAdapter.ethers` if you need it
+- Exposes all loaded contract configuration under `ethAdapter.contractConfig`
+
 
 # About :grey_question:	
 
@@ -80,7 +86,6 @@ Remember:
 - Parameters for contract methods must be passed as destructured objects as `{paramName:value}`
 - Additionally functions are named with IN/OUT counts to provide access to overloaded functions
 
-
 ## More Functionality :gear:	
 
 EthAdapter has some inbuilts for basic things, and also gives you direct access to ethers if you need it through `ethAdapter.ethers`
@@ -89,9 +94,15 @@ EthAdapter has some inbuilts for basic things, and also gives you direct access 
 
 These are currently quite alpha and used primarily internal of the adapter, however are available if needed
 
-#### **setEqualizeFunction()**
+### **setOnNetworkChangeFunction(onNetworkFunction = (networkId: number) => {})**
 
-This function is used for the changing the function that is ran everytime ethAdapter changes it's own instance state. This can be beneficial if you integrate EthAdapter into a state management system such as redux, but is completely optional and state can be managed locally or in a different mannger.
+Update the function to be ran anytime the network is updated on the provider
+### **setOnAccountChangeFunction(onAccountChangeFunction = (activeAccount: string) => {})**
+
+Update the function to be ran anytime the active account is changed on the provider
+#### **setEqualizeFunction( () => {} )**
+
+This function is used for the changing the function that is ran everytime ethAdapter changes it's own instance state. This can be beneficial if you integrate EthAdapter into a state management system such as redux.
 
 #### **setJsonRpcProvider(url: string)**
 
