@@ -20,7 +20,7 @@ export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
     console.log("========= TRANSPILER  START =========")
     console.log("=====================================\x1B[0m")
 
-    console.log(`\n\x1B[36mPreparing to transpile ABI and Contract Names to ES6 formats to ${__dirname}/../adapter/\x1B[33m\n`);
+    console.log(`\n\x1B[36mPreparing to transpile ABI and Contract Names to ES6 formats to ${path.resolve(__dirname + '/../adapter/')}\x1B[33m\n`);
     await sleeper(1500);
 
     console.log("Transpiling ABI and Contract names to ES6 Syntax...\n");
@@ -52,7 +52,7 @@ export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
 
     console.log(`\n\x1B[0;32mDist Successfully Created at *eth-adapter/dist/index.js\n\x1B[0m`);
 
-    console.log("\x1B[1;35m=====================================")
+    console.log("\x1B[0;33m=====================================")
     console.log("========== TRANSPILER  END ==========")
     console.log("=====================================\x1B[0m\n")
 

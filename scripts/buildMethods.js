@@ -6,11 +6,34 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Before generatig functions a list of all methods for X contract must be made to 
+// Safely predict when overloaded function parameters for the contract instance must be used to
+// correctly identify an overloaded method on a ethers.Contract instance.
+// Store method count as contractName:methodIdentifier:INT where methodIdentifier == funcName
+const preFxGeneratorMethodList = {}
+
 /**
  * Builds all web3 methods per web3 contract
  * @param {String} ABIS Contract ABI JSON to build methods from 
  */
 export async function buildMethods(ABIS) {
+
+    // Sets all available methods for contractName within array on preFxGeneratorMethodList
+    const parseForAllContractMethods = async (contractName, fxObj) => {
+        return new Promise(res => {
+            // If contract name doesn't exist, add it
+            if (!preFxGeneratorMethodList[contractName]) { 
+                preFxGeneratorMethodList[contractName] = {};
+            }
+            // If method name doesn't exit add it with count 1
+            if (!preFxGeneratorMethodList[contractName][fxObj.name]) {
+                preFxGeneratorMethodList[contractName][fxObj.name] = 1;
+            } else {
+                preFxGeneratorMethodList[contractName][fxObj.name] += 1;
+            }
+            res();
+        })
+    }
 
     const createFunctionString = ({ contractName, name, inputs, outputs, stateMutability, type }) => {
 
@@ -28,8 +51,8 @@ export async function buildMethods(ABIS) {
 
         let paramRepeatCount = 1;
         const extractInputName = (inputName) => {
-            return !inputName ? ( () => {
-                let name = "nameMissing" + "_" + paramRepeatCount; 
+            return !inputName ? (() => {
+                let name = "nameMissing" + "_" + paramRepeatCount;
                 paramRepeatCount++;
                 return name;
             })() : inputName;
@@ -74,12 +97,27 @@ export async function buildMethods(ABIS) {
             : `ethAdapter._getSignerContractInstance("${contractName}")`
 
         fx += `\t\tlet contractInstance = ${contractCallerString};`;
-        fx += `\n\t\tconst response = await contractInstance["${name}"](`
+
+        // If function is overloaded, use overloaded accessor name, else just use the function name
+        if (preFxGeneratorMethodList[contractName][name] > 1) {
+            let verboseFxAccessor = name + "(";
+            for (let i = 0; i < inputs.length; i++) {
+                let input = inputs[i];
+                verboseFxAccessor += `${extractInputName(input.type)}`
+                if (i !== inputs.length - 1) { verboseFxAccessor += ','; } // Comma for each param 
+            }
+            // close accessor
+            verboseFxAccessor += ")";
+            console.log(`\n\x1B[1;35mOverloaded function ${name} on ${contractName} detected, using verbose function accessor ${verboseFxAccessor}`);
+            fx += `\n\t\tconst response = await contractInstance["${verboseFxAccessor}"](`
+        } else {
+            fx += `\n\t\tconst response = await contractInstance["${name}"](`
+        }
+
         // Add inputs to call -- Again reset paramrepeatercount
         paramRepeatCount = 1;
         for (let i = 0; i < inputs.length; i++) {
             let input = inputs[i];
-            // if (input.name === "contractInstance") { continue } // Skip shimmed input
             fx += `${extractInputName(input.name)}`
             if (i !== inputs.length - 1) { fx += ', '; } // Comma for each param 
         }
@@ -123,6 +161,12 @@ export async function buildMethods(ABIS) {
         // Isolate contract name/abiKEY for ABIS object
         let contractName = abiKEY;
         let contractABI = JSON.parse(ABIS[abiKEY]);
+
+        // Get preGeneratedContractMethod count
+        for (let fxObj of contractABI) {
+            // Parse all contract method names to provide overload detection in createFunctionString();
+            await parseForAllContractMethods(contractName, fxObj)
+        }
 
         // Parse ABI for methods
         for (let fxObj of contractABI) {
@@ -197,7 +241,7 @@ export async function buildMethods(ABIS) {
     output = ethAdapter.replace(`// !! GENERATED FUNCTIONS BELOW HERE`, output)
     // Replace the contractsMethods typing with the contractMethods typeof
     output = output.replace(`contractMethods: object;`, "contractMethods: typeof contractMethods");
-    
+
     // Write it
     await fs.writeFile(__dirname + '/../src/adapter/customEthAdapter.ts', output, "utf8");
 

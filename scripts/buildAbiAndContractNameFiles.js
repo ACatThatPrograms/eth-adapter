@@ -23,7 +23,7 @@ export async function buildAbiAndContractNameFiles(arg) {
 
     for (const abiFileName of AbiFiles) {
         try {
-            process.stdout.write(`\x1B[0;36mAttempting Parse of ${process.cwd() + '/artifacts/' + abiFileName}...`);
+            process.stdout.write(`\x1B[0;36mAttempting Parse of ${path.resolve(process.cwd() + '/artifacts/' + abiFileName)}...`);
             await sleeper(500);
             const abiFile = await fs.readFile(process.cwd() + '/artifacts/' + abiFileName)
             const abiFileAsString = abiFile.toString();
