@@ -2,7 +2,7 @@
  * @enum { String } - Ethereum network names by NAME => String
  */
  export const ETHEREUM_NETWORK_NAMES = {
-    ETHEREUM_MAINNET: "Ethereum Mainnet",
+    ETHEREUM_MAINNET: "Ethereum",
     ROPSTEN_TESTNET: "Ropsten",
     KOVAN_TESTNET: "Kovan",
     RINKEBY_TESTNET: "Rinkeby",
