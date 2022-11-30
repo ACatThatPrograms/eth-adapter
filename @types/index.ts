@@ -17,6 +17,8 @@ export type bytes16 = string | number;
 export type bytes32 = string;
 export type bytesarray = string[];
 
+export type tuplearray = Array<2>[];
+
 export type ContractReadMethodResponse = {
     error: string | boolean,
 }
