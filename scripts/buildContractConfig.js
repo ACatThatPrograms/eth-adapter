@@ -26,7 +26,12 @@ export async function buildContractConfig() {
             let contractName = environmentKey.replace("_CONTRACT_ADDRESS", "").replace("CONTRACT_ADDRESS", "").replace("REACT_APP__", "").replace("REACT_APP_", "").toUpperCase();
             CONTRACT_NAMES[contractName] = contractName;
             CONTRACT_ADDRESSES[contractName] = process.env[environmentKey];
-            CONTRACT_ABIS[contractName] = JSON.parse(abis[contractName]);
+            try {
+                CONTRACT_ABIS[contractName] = JSON.parse(abis[contractName]);
+            } catch (ex) {
+                console.error(`\n\x1B[0;31mCould not parse ABI into CONTRACT_ABIS[contractName] where contractName == ${contractName} and JSON.parse(abis${contractName}) was attempted -- Verify generated abi file at ${path.resolve(__dirname + '/../src/adapter/abis.ts')} has an entry for ${contractName}\n\x1B[0m`);
+                throw new Error("Critical Eth-Adapter Compiling Error Encountered -- See Above Message")
+            }
             CONTRACTS[contractName] = {
                 name: contractName,
                 address: process.env[environmentKey],
