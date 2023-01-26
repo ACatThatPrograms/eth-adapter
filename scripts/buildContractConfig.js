@@ -29,7 +29,7 @@ export async function buildContractConfig() {
             try {
                 CONTRACT_ABIS[contractName] = JSON.parse(abis[contractName]);
             } catch (ex) {
-                console.error(`\n\x1B[0;31mCould not parse ABI into CONTRACT_ABIS[contractName] where contractName == ${contractName} and JSON.parse(abis${contractName}) was attempted -- Verify generated abi file at ${path.resolve(__dirname + '/../src/adapter/abis.ts')} has an entry for ${contractName}\n\x1B[0m`);
+                console.error(`\n\x1B[0;31mCould not parse ABI into CONTRACT_ABIS[contractName] where contractName == ${contractName} and JSON.parse(abis[contractName]) was attempted -- Verify generated abi file at ${path.resolve(__dirname + '/../src/adapter/abis.ts')} has an entry for ${contractName}\n\x1B[0m`);
                 throw new Error("Critical Eth-Adapter Compiling Error Encountered -- See Above Message")
             }
             CONTRACTS[contractName] = {

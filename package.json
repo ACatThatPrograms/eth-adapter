@@ -1,6 +1,6 @@
 {
   "name": "eth-adapter",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "An ethereum adapter/transpiler to make interacting wirth smart contracts wicked simple",
   "main": "dist/index.js",
   "types": "dist/src/index.d.ts",
