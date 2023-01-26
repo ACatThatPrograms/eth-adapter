@@ -57,7 +57,7 @@ export async function buildAbiAndContractNameFiles(arg) {
     await fs.writeFile(__dirname + '/../src/adapter/contractNames.ts', contractNamesES6, "utf8");
     await fs.writeFile(__dirname + '/_contractNames.js', contractNamesES6, "utf8");
 
-    console.log(`\x1B[0;32mABIs and CONTRACT_NAMES Successfully Parsed to ES6 Syntax in ${path.resolve(__dirname + '/../src/adapter/contract_names.ts')}\n\x1B[0m`);
+    console.log(`\x1B[0;32mABIs and CONTRACT_NAMES and ABIs Successfully Parsed to ES6 Syntax in ${path.resolve(__dirname + '/../src/adapter/contract_names.ts||abis.ts')}\n\x1B[0m`);
 
     return ABIS;
 
