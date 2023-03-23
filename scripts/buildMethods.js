@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Before generatig functions a list of all methods for X contract must be made to 
+// Before generating functions a list of all methods for X contract must be made to 
 // Safely predict when overloaded function parameters for the contract instance must be used to
 // correctly identify an overloaded method on a ethers.Contract instance.
 // Store method count as contractName:methodIdentifier:INT where methodIdentifier == funcName

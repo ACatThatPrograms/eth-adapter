@@ -323,8 +323,6 @@ class EthAdapter {
     }
 }
 
-let ethAdapter = new EthAdapter();
+export const ethAdapter = new EthAdapter();
 
 // !! GENERATED FUNCTIONS BELOW HERE
-
-export default ethAdapter;

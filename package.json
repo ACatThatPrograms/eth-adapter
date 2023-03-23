@@ -2,8 +2,9 @@
   "name": "eth-adapter",
   "version": "0.0.13",
   "description": "An ethereum adapter/transpiler to make interacting wirth smart contracts wicked simple",
-  "main": "dist/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/es6/index.mjs",
+  "types": "dist/cjs/src/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "rollup -c",

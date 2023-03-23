@@ -4,8 +4,11 @@ export type uint8 = string | number;
 export type uint16 = string | number;
 export type uint32 = string | number;
 export type uint64 = string | number;
+export type uint96 = string | number;
 export type uint128 = string | number;
 export type uint256 = string | number;
+
+export type uint256array = Array<uint256>
 
 export type bool = boolean;
 export type address = string;

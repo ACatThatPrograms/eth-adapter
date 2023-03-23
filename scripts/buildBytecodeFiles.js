@@ -8,7 +8,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Builds all ABI files, and additionally places extracted contract names in their respective config file.
  * @param {*} arg 
  */
 export async function buildBytecodeFiles(arg) {
