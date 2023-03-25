@@ -7,7 +7,7 @@
 import { ETHEREUM_NETWORK_BY_ID } from "./network";
 import { ethers, Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
-import CONTRACT_CONFIGURATION from "./config";
+import { CONTRACT_CONFIG as CONTRACT_CONFIGURATION } from "./config";
 import * as types from "../../@types";
 
 // Allow window.ethereum

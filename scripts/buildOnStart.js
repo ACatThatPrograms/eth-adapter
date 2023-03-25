@@ -2,25 +2,30 @@
 import { buildAbiAndContractNameFiles } from './buildAbiAndContractNameFiles.js';
 import { buildMethods } from './buildMethods.js';
 import { distMaker } from './createDist.js';
-import fs from 'fs/promises';
+import { checkArtifactsForHash, getArtifactsHash, writeHashFile } from './hashHandling.js';
 const sleeper = (amt) => ((new Promise(res => setTimeout(res, amt))));
 
 // Es6 Path resolve
-import path, { join } from 'path';
+import path from 'path';
 import { fileURLToPath } from 'url';
-import { ethers } from 'ethers';
+import { loadConfig } from './configHandling.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
  * @param {*} startRun - Is this a run cycle for pre-npm start?
- * @param {*} suppressCfgMsg - Should we suppress the config runner message?
  */
-export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
+export async function buildOnStart(startRun = false) {
 
-    let artifactsHaveChanged = await checkArtifactsForHash();
+    // Load eth-adapter config && check artifacts hash for differences
+    const ethAdapterConfig = await loadConfig()
+    const artifactsHaveChanged = await checkArtifactsForHash();
 
-    if (artifactsHaveChanged) {
+    if (ethAdapterConfig.alwaysCompile) {
+        console.log(`\x1B[31m"alwaysCompile" detected\n\x1B[36m-To avoid transpile when artifacts do not change set alwaysCompile to false\x1B[33m\n`);
+    }
+
+    if (artifactsHaveChanged || ethAdapterConfig.alwaysCompile) {
         
         console.log("\x1B[33m=====================================")
         console.log("========= TRANSPILER  START =========")
@@ -44,17 +49,25 @@ export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
         await sleeper(1500);
         console.log("\x1B[33mBuilding Contract Configuration Files...");
         let configBuildModule = await import('../scripts/buildContractConfig.js');
-        await configBuildModule.buildContractConfig();
+        const configSuccess = await configBuildModule.buildContractConfig(ethAdapterConfig);
+
+        if (!configSuccess) { 
+            console.log("\x1B[31mError creating contract configuration. See logs\n");
+            return 
+        }
 
         await sleeper(1500);
         console.log("\x1B[33mBuilding eth-adapter /dist...\n");
         let distRes = await distMaker();
 
         if (!!distRes.error) {
-        console.log("\x1B[31mError creating dist");
-        console.log(distRes.error)
-        return
+            console.log("\x1B[31mError creating dist");
+            console.log(distRes.error)
+            return
         }
+
+        // If no dist error -- Write the latest hash for comparing
+        await writeHashFile(await getArtifactsHash())
 
         console.log(`\n\x1B[0;32mDist Successfully Created at *eth-adapter/dist/\n\x1B[0m`);
 
@@ -72,37 +85,6 @@ export async function buildOnStart(startRun = false, suppressCfgMsg = false) {
         await sleeper(500)
     }
 
-}
-
-async function checkArtifactsForHash() {
-
-    const getArtifactsHash = async () => {
-        const allFilesHashes = [];
-        const artifactDirFiles = await fs.readdir(path.resolve(process.cwd() + '/artifacts'))
-        for (const filename of artifactDirFiles) {
-            if (filename === "artifactHash") {
-                continue;
-            }
-            let artifactRead = (await fs.readFile(path.resolve(process.cwd() + '/artifacts/' + filename)));
-            allFilesHashes.push(ethers.utils.keccak256(artifactRead))
-        }
-        const joinedHashes = allFilesHashes.join("")
-        const finalHash = ethers.utils.keccak256(Buffer.from(joinedHashes))
-        return finalHash;
-    }
-
-    try {
-        let readHash = (await fs.readFile(path.resolve(process.cwd() + '/' + ".artifactsHash"))).toString()
-        return readHash !== await getArtifactsHash()
-    } catch (ex) {
-        if (ex.message.indexOf("no such file or directory") !== -1) {
-            // Write the hash if it doesn't exist
-            console.log(`\x1B[1;33mWrote first artifact hash to .artifactsHash in root for tracking artifact changes\n\x1B[0m`);
-            fs.writeFile(path.resolve(process.cwd() + '/' + ".artifactsHash"), await getArtifactsHash())
-        } else {
-            throw(ex);
-        }
-    }
-
+    return true;
 
 }

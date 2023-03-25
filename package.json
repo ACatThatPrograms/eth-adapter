@@ -28,6 +28,7 @@
     "typescript": "^4.8.4"
   },
   "bin": {
-    "ethpst": "./bin/preStartTranspile.js"
+    "ethpst": "./bin/preStartTranspile.js",
+    "ethinit": "./bin/generateConfig.js"
   }
 }

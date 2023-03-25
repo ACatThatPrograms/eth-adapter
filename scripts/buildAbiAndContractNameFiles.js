@@ -49,15 +49,15 @@ export async function buildAbiAndContractNameFiles(arg) {
     }
 
     // Write Names && ABIS locally for use in scrips as JS as well
-    const AbiES6Export = "const abis = " + JSON.stringify(ABIS) + "\nexport default abis;";
+    const AbiES6Export = "export const abis = " + JSON.stringify(ABIS);
     await fs.writeFile(__dirname + '/../src/adapter/abis.ts', AbiES6Export, "utf8");
     await fs.writeFile(__dirname + '/_abis.js', AbiES6Export, "utf8");
 
-    const contractNamesES6 = "const CONTRACT_NAMES = " + JSON.stringify(CONTRACT_NAMES) + "\nexport default CONTRACT_NAMES;";
+    const contractNamesES6 = "export const CONTRACT_NAMES = " + JSON.stringify(CONTRACT_NAMES);
     await fs.writeFile(__dirname + '/../src/adapter/contractNames.ts', contractNamesES6, "utf8");
     await fs.writeFile(__dirname + '/_contractNames.js', contractNamesES6, "utf8");
 
-    console.log(`\x1B[0;32mABIs and CONTRACT_NAMES and ABIs Successfully Parsed to ES6 Syntax in ${path.resolve(__dirname + '/../src/adapter/contract_names.ts||abis.ts')}\n\x1B[0m`);
+    console.log(`\x1B[0;32mABIs, CONTRACT_NAMES, and ABIs Successfully Parsed to ES6 Syntax into:\n\n\x1B[0;32m${path.resolve(__dirname + '/../src/adapter/contract_names.ts')}\n${path.resolve(__dirname + '/../src/adapter/abis.ts')}\n\x1B[0m`);
 
     return ABIS;
 

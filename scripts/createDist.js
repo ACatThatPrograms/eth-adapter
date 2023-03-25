@@ -24,7 +24,7 @@ const getDistOutputOptions = (isCommonJsModule) => {
 };
 
 const removeDistFiles = async () => {
-    console.log(`\nRemoving old dist files, if any . . .`);
+    console.log(`Removing old dist files, if any...`);
     try {
         await fs.rm(__dirname + "/../dist/es6/", { recursive: true });
     } catch (ex) {
@@ -62,7 +62,7 @@ export const distMaker = async () => {
                     // Determine env based on package.json's type:"commonjs" presense, defaults to ES6 Dist
                     let packageJson = JSON.parse(await fs.readFile(process.cwd() + "/package.json"));
                     let isCommonJsModule = packageJson.type && packageJson.type === "commonjs";
-                    console.log(`\nBuilding dist as ${isCommonJsModule ? "commonjs module" : "es6 module"}`);
+                    console.log(`\n\x1B[1;36mBuilding dist as ${isCommonJsModule ? "commonjs module" : "es6 module"}\x1B[0;37m`);
                     if (!isCommonJsModule) {
                         console.log(
                             `If you need require() and prefer commonjs modules: Include "type":"commonjs" in your package.json`
@@ -73,7 +73,7 @@ export const distMaker = async () => {
                     options[0].output = [newDistOpts];
                     // Update eth-adapter package.json to reflect correct typing location
                     updateTypeLocationInPackage(isCommonJsModule)
-                    console.log(`\nCurrently have ${warnings.count} warnings`);
+                    console.log(`${warnings.count > 0 ? `\x1B[1;33m` : ""}\nCurrently have ${warnings.count} warnings\x1B[0;37m`);
                     warnings.flush();
                     for (const optionsObj of options) {
                         const bundle = await rollup(optionsObj);

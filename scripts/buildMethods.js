@@ -245,6 +245,6 @@ export async function buildMethods(ABIS) {
     // Write it
     await fs.writeFile(__dirname + '/../src/adapter/customEthAdapter.ts', output, "utf8");
 
-    console.log(`\n\x1B[0;32mFunctions Successfully Parsed to ES6 Syntax in ${path.resolve(__dirname + '/../src/adapter/customEthAdapter.ts')}\n\x1B[0m`);
+    console.log(`\n\x1B[0;32mContract Methods Successfully Parsed to ES6 Syntax into:\n\n${path.resolve(__dirname + '/../src/adapter/customEthAdapter.ts')}\n\x1B[0m`);
 
 }
