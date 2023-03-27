@@ -22,7 +22,7 @@ export async function buildOnStart(startRun = false) {
     const artifactsHaveChanged = await checkArtifactsForHash();
 
     if (ethAdapterConfig.alwaysCompile) {
-        console.log(`\x1B[31m"alwaysCompile" detected\n\x1B[36m-To avoid transpile when artifacts do not change set alwaysCompile to false\x1B[33m\n`);
+        console.log(`\x1B[31m"alwaysCompile" detected\n\x1B[36m-To avoid transpile when artifacts or configuration do not change set alwaysCompile to false\x1B[33m\n`);
     }
 
     if (artifactsHaveChanged || ethAdapterConfig.alwaysCompile) {
