@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import ethers from 'ethers'
 import path from 'path';
 import { configFileName } from './const.js';
+import { loadConfig } from './configHandling.js';
 
 // Reads all artifact files and config file and creates a hash to diff any changes
 export async function getArtifactsHash() {
@@ -15,9 +16,10 @@ export async function getArtifactsHash() {
         allFilesHashes.push(ethers.utils.keccak256(artifactRead))
     }
     // Read the config file and hash it as well -- Updates should be made if it mismatches
-    let configFileRead = (await fs.readFile(path.resolve(process.cwd() + '/' + configFileName)));
+    // CHECK FOR A FAIL HERE!
+    let configAsString = JSON.stringify(await loadConfig());
     // Join everything
-    const joinedHashes = allFilesHashes.join("") + configFileRead.toString(); 
+    const joinedHashes = allFilesHashes.join("") + configAsString; 
     const finalHash = ethers.utils.keccak256(Buffer.from(joinedHashes))
     return finalHash;
 }

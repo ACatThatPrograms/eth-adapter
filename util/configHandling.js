@@ -54,7 +54,7 @@ export const generateDefaultConfig = async () => {
 
 export const loadConfig = async () => {
     try {
-        let { ethAdapterConfig } = await import(process.cwd() + "/eth-adapter.config.js");
+        let { ethAdapterConfig } = await import(process.cwd() + "/" + configFileName);
         return ethAdapterConfig;
     } catch (ex) {
         if (ex.code === "ERR_MODULE_NOT_FOUND") {
@@ -63,6 +63,7 @@ export const loadConfig = async () => {
             );
             return false;
         } else {
+            console.log("Loading eth-adapter config error:")
             throw new Error(ex);
         }
     }

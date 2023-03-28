@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { recurseForObjectKey } from '../util/util.js';
+import { colorBash, recurseForObjectKey } from '../util/util.js';
 
 // Es6 Path resolve
 import path from 'path';
@@ -23,7 +23,7 @@ export async function buildAbiAndContractNameFiles(arg) {
 
     for (const abiFileName of AbiFiles) {
         try {
-            process.stdout.write(`\x1B[0;36mAttempting Parse of ${path.resolve(process.cwd() + '/artifacts/' + abiFileName)}...`);
+            process.stdout.write(`${colorBash.cyan}Attempting Parse of ${path.resolve(process.cwd() + '/artifacts/' + abiFileName)}...`);
             await sleeper(500);
             const abiFile = await fs.readFile(process.cwd() + '/artifacts/' + abiFileName)
             const abiFileAsString = abiFile.toString();
@@ -35,9 +35,9 @@ export async function buildAbiAndContractNameFiles(arg) {
             const contractName = abiFileName.replace('.json', "").toUpperCase();
             ABIS[contractName] = abiJson;
             CONTRACT_NAMES[contractName] = contractName;
-            process.stdout.write("\x1B[1;32m SUCCESS\n\x1B[0m\n")
+            process.stdout.write("\x1B[1;32m SUCCESS\n\x1B[0m")
         } catch (ex) {
-            process.stdout.write("\x1B[1;31m FAIL\n\x1B[0m\n");
+            process.stdout.write("\x1B[1;31m FAIL\n\x1B[0m");
             errList.push(ex.message);
         }
     }
@@ -57,7 +57,7 @@ export async function buildAbiAndContractNameFiles(arg) {
     await fs.writeFile(__dirname + '/../src/adapter/contractNames.ts', contractNamesES6, "utf8");
     await fs.writeFile(__dirname + '/_contractNames.js', contractNamesES6, "utf8");
 
-    console.log(`\x1B[0;32mABIs, CONTRACT_NAMES, and ABIs Successfully Parsed to ES6 Syntax into:\n\n\x1B[0;32m${path.resolve(__dirname + '/../src/adapter/contract_names.ts')}\n${path.resolve(__dirname + '/../src/adapter/abis.ts')}\n\x1B[0m`);
+    console.log(`\n${colorBash.green}ABIs, CONTRACT_NAMES, and ABIs Successfully Parsed to ES6 Syntax at:\n\n${colorBash.cyan}${path.resolve(__dirname + '/../src/adapter/contract_names.ts')}\n${path.resolve(__dirname + '/../src/adapter/abis.ts')}\n\x1B[0m`);
 
     return ABIS;
 

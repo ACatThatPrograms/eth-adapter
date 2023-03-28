@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { generateDefaultConfig } from "../scripts/configHandling.js";
-import { rl } from "../scripts/util.js";
+import { generateDefaultConfig } from "../util/configHandling.js";
+import { rl } from "../util/util.js";
 
 main();
 

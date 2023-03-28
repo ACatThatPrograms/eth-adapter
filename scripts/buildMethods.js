@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 // Es6 Path resolve
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { colorBash } from '../util/util.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -108,7 +109,7 @@ export async function buildMethods(ABIS) {
             }
             // close accessor
             verboseFxAccessor += ")";
-            console.log(`\n\x1B[1;35mOverloaded function ${name} on ${contractName} detected, using verbose function accessor ${verboseFxAccessor}`);
+            console.log(`${colorBash.lblue}Overloaded function ${name} on ${contractName} detected, using verbose function name ${colorBash.lblueB}${verboseFxAccessor}`);
             fx += `\n\t\tconst response = await contractInstance["${verboseFxAccessor}"](`
         } else {
             fx += `\n\t\tconst response = await contractInstance["${name}"](`
@@ -245,6 +246,6 @@ export async function buildMethods(ABIS) {
     // Write it
     await fs.writeFile(__dirname + '/../src/adapter/customEthAdapter.ts', output, "utf8");
 
-    console.log(`\n\x1B[0;32mContract Methods Successfully Parsed to ES6 Syntax into:\n\n${path.resolve(__dirname + '/../src/adapter/customEthAdapter.ts')}\n\x1B[0m`);
+    console.log(`\n${colorBash.green}Contract Methods Successfully Parsed to ES6 Syntax at:\n${colorBash.cyan}${path.resolve(__dirname + '/../src/adapter/customEthAdapter.ts')}\n\x1B[0m`);
 
 }

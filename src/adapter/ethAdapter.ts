@@ -20,6 +20,7 @@ declare global {
 // Is the ethAdapter instanced?
 let ethAdapterIsInstanced: boolean = false;
 
+
 /**
  * @class Ethereum Adapter
  * @classdesc Used to interact with the browser's web3 wallet
@@ -72,6 +73,8 @@ class EthAdapter {
 
         this.contractMethods = null;
         this.contractConfig = CONTRACT_CONFIGURATION;
+
+        
     }
 
     /**
@@ -323,6 +326,6 @@ class EthAdapter {
     }
 }
 
-export const ethAdapter = new EthAdapter();
+export const ethAdapter:EthAdapter = new EthAdapter();
 
 // !! GENERATED FUNCTIONS BELOW HERE
