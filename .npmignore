@@ -1,0 +1,15 @@
+artifacts/
+dist/**/*
+readme_img/
+src/adapter/abis.ts
+src/adapter/config.ts
+src/adapter/contractNames.ts
+src/adapter/customEthAdapter.ts
+scripts/_abis.js
+scripts/_contractNames.js
+eth-adapter.config.js
+.artifactsHash
+.env
+.prettierrc
+
+README.md

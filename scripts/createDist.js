@@ -5,7 +5,7 @@ import fs from "fs/promises";
 // Es6 Path resolve
 import path from "path";
 import { fileURLToPath } from "url";
-import { colorBash } from "../util/util.js";
+import { colorBash } from "./util/util.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

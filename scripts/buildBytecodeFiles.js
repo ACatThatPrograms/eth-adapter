@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { recurseForObjectKey } from '../util/util.js';
+import { recurseForObjectKey } from './util/util.js';
 
 // Es6 Path resolve
 import path from 'path';

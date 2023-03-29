@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import ethers from 'ethers'
 import path from 'path';
-import { configFileName } from './const.js';
 import { loadConfig } from './configHandling.js';
 
 // Reads all artifact files and config file and creates a hash to diff any changes

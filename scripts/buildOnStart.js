@@ -2,14 +2,14 @@
 import { buildAbiAndContractNameFiles } from './buildAbiAndContractNameFiles.js';
 import { buildMethods } from './buildMethods.js';
 import { distMaker } from './createDist.js';
-import { checkArtifactsForHash, getArtifactsHash, writeHashFile } from '../util/hashHandling.js';
+import { checkArtifactsForHash, getArtifactsHash, writeHashFile } from './util/hashHandling.js';
 const sleeper = (amt) => ((new Promise(res => setTimeout(res, amt))));
 
 // Es6 Path resolve
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { loadConfig } from '../util/configHandling.js';
-import { colorBash } from '../util/util.js';
+import { loadConfig } from './util/configHandling.js';
+import { colorBash } from './util/util.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

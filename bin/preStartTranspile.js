@@ -2,9 +2,9 @@
 import dotenv from "dotenv";
 import { argv } from "process";
 import { buildOnStart } from "../scripts/buildOnStart.js";
-import { rl } from "../util/util.js";
+import { rl } from "../scripts/util/util.js";
 import { exec } from "child_process";
-import { colorBash } from "../util/util.js";
+import { colorBash } from "../scripts/util/util.js";
 
 const determineProcessToRun = () => {
     // Remove first two calls from arg stack

@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { colorBash, recurseForObjectKey } from '../util/util.js';
+import { colorBash, recurseForObjectKey } from './util/util.js';
 
 // Es6 Path resolve
 import path from 'path';

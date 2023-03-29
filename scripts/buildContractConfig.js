@@ -7,10 +7,10 @@ import fs from "fs/promises";
 // Es6 Path resolve
 import path from "path";
 import { fileURLToPath } from "url";
-import { configFileName } from "../util/const.js";
+import { configFileName } from "./util/const.js";
 import { ethers } from "ethers";
-import { readArtifactsDirectory } from "../util/util.js";
-import { colorBash } from "../util/util.js";
+import { readArtifactsDirectory } from "./util/util.js";
+import { colorBash } from "./util/util.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
