@@ -8,15 +8,16 @@ const sleeper = (amt) => ((new Promise(res => setTimeout(res, amt))));
 // Es6 Path resolve
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { loadConfig } from './util/configHandling.js';
+import { loadConfig, requestConfigUpdate } from './util/configHandling.js';
 import { colorBash } from './util/util.js';
+import { determineForcePackageLockUpdate } from './forcePackageLockUpdate.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function buildOnStart() {
 
     // Load eth-adapter config && check artifacts hash for differences
-    const ethAdapterConfig = await loadConfig()
+    let ethAdapterConfig = await loadConfig()
     const artifactsHaveChanged = await checkArtifactsForHash();
 
     if (ethAdapterConfig.alwaysCompile) {
@@ -24,7 +25,12 @@ export async function buildOnStart() {
     }
 
     if (artifactsHaveChanged || ethAdapterConfig.alwaysCompile) {
-        
+
+        if (!!ethAdapterConfig && artifactsHaveChanged) {
+            let newConf = await requestConfigUpdate()
+            ethAdapterConfig = newConf ? newConf : ethAdapterConfig;
+        }
+
         console.log(`${colorBash.yellowB}=====================================`)
         console.log("========= TRANSPILER  START =========")
         console.log(`=====================================${colorBash.reset}`)
@@ -72,8 +78,10 @@ export async function buildOnStart() {
         console.log("========== TRANSPILER  END ==========")
         console.log(`=====================================${colorBash.reset}`)
     
+        await determineForcePackageLockUpdate(ethAdapterConfig);
+
     } else {
-        console.log(`\x1B[0;32mArtifacts not changed -- No compilation necessary\n\x1B[0m`);
+        console.log(`\x1B[0;32mArtifacts not changed -- No compilation necessary\x1B[0m`);
     }
 
     return true;

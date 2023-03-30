@@ -17,7 +17,7 @@ const determineProcessToRun = () => {
 
 // Setup .env & run buildOnStart()
 dotenv.config();
-let success = await buildOnStart(true);
+let success = await buildOnStart();
 console.log(`\n${colorBash.lcyan}Eth Pre-Start Transpilation (ethpst): Success? => ${success ? colorBash.greenB : colorBash.redB} ${success}${colorBash.reset}`);
 console.log(`\n${colorBash.cyan}Resuming...${colorBash.reset}`)
 console.log();

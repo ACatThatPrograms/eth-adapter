@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { configFileName } from "./const.js";
-import { readArtifactsDirectory, writeProcessCwdFile } from "./util.js";
+import { colorBash, readArtifactsDirectory, writeProcessCwdFile } from "./util.js";
 import { rl } from './util.js';
 
 const defaultConfig = {
@@ -50,6 +50,7 @@ export const generateDefaultConfig = async () => {
         "module.exports.ethAdapterConfig = " + JSON.stringify(newConfig, false, 2)
     );
     console.log(`\n\x1B[0;32mSuccessfully wrote new config file to ${process.cwd()+"/"+configFileName} ${!requestAddresses ? '\n\n\x1B[1;33mRemember to fill out the contract addresses in the newly created file before running the transpiler\n' : "\n"}`)
+    return newConfig;
 };
 
 export const loadConfig = async () => {
@@ -68,3 +69,21 @@ export const loadConfig = async () => {
         }
     }
 };
+
+export const requestConfigUpdate = async () => {
+    let reconfigureAnswer = await rl.question(`${colorBash.cyanB}An artifact change was detected!\n${colorBash.cyan}Would you like to automatically reconfigure ${colorBash.lblue}${configFileName}${colorBash.blue} ?${colorBash.yellow} y|n (Enter for yes): `)
+    if (reconfigureAnswer.toLocaleLowerCase() === "n") {
+        return false;
+    } else {
+        return await generateDefaultConfig();
+    }
+}
+
+export const amendConfigFile = async () => {
+    // Parse the existing configuration file and amend as follows
+    // 1. Read existing config
+    // 2. Read artifacts files
+    // 3. If config has artifact file entry, keep existing address
+    // 4. If config does not have an artifact file entry, add it with 0x0 -- SHOW WARNINGG UP ADDITIONS WITH 0x0
+    // 5. If config has entries that are not artifact/FILENAMES remove them
+}
