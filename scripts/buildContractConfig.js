@@ -11,6 +11,7 @@ import { configFileName } from "./util/const.js";
 import { ethers } from "ethers";
 import { readArtifactsDirectory } from "./util/util.js";
 import { colorBash } from "./util/util.js";
+import { loadConfig } from "./util/configHandling.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -31,11 +32,10 @@ async function checkContractEnvCount() {
 }
 
 // Builds contract configuration files -- Returns true on OK or false on fail
-export async function buildContractConfig(ethAdapterConfig) {
+export async function buildContractConfig() {
     // Check for env variable count
     const hasEnvContractVariables = (await checkContractEnvCount()) > 0;
-    // Check for config file
-    // const ethAdapterConfig = await loadConfig();
+    const ethAdapterConfig = await loadConfig();
 
     let contractConfigConstructionSuccess = false;
 
@@ -113,6 +113,7 @@ async function extractConfigFromEnvironment() {
 
 // Extract configuration addresses from config file
 async function extractConfigFromConfigFile(configFile) {
+    console.log(configFile)
     let contractAddressNameKeys = Object.keys(configFile.contractAddresses);
     for (let i = 0; i < contractAddressNameKeys.length; i++) {
         let contractNameAndKey = contractAddressNameKeys[i];
@@ -149,7 +150,7 @@ async function setAndReturnAbiForContract(contractName) {
                 __dirname + "/../src/adapter/abis.ts"
             )} has an entry for ${contractName}\n\x1B[0m`
         );
-        console.error("Critical Eth-Adapter Compiling Error Encountered -- See Above Message");
+        console.error(`${colorBash.redB}Critical Eth-Adapter Compiling Error Encountered -- See Above Message\n`);
         return false;
     }
 }
