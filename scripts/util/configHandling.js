@@ -75,7 +75,7 @@ export const loadConfig = async () => {
         let ethAdapterConfig = JSON.parse((await readFile(process.cwd() + "/" + configFileName)).toString());
         return ethAdapterConfig;
     } catch (ex) {
-        if (ex.code === "ERR_MODULE_NOT_FOUND") {
+        if (ex.code === "ERR_MODULE_NOT_FOUND" || (ex.message.indexOf("no such file") !== -1)) {
             console.log(
                 `\n\x1B[36mNo eth-adapter config found, attempting to fall back on .env for contract configuration\nGenerate new config with \x1B[33mnpx ethinit\x1B[36m for better feature support\x1B[33m\n`
             );

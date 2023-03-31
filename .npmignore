@@ -8,7 +8,6 @@ src/adapter/customEthAdapter.ts
 scripts/_abis.js
 scripts/_contractNames.js
 eth-adapter.config.js
-.artifactsHash
 .env
 .prettierrc
 

@@ -113,7 +113,6 @@ async function extractConfigFromEnvironment() {
 
 // Extract configuration addresses from config file
 async function extractConfigFromConfigFile(configFile) {
-    console.log(configFile)
     let contractAddressNameKeys = Object.keys(configFile.contractAddresses);
     for (let i = 0; i < contractAddressNameKeys.length; i++) {
         let contractNameAndKey = contractAddressNameKeys[i];

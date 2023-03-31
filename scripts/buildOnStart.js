@@ -83,7 +83,8 @@ export async function buildOnStart() {
         console.log("========== TRANSPILER  END ==========")
         console.log(`=====================================${colorBash.reset}`)
     
-        // await determineForcePackageLockUpdate(ethAdapterConfig);
+        // Update package lock incrementor to force rebundling of the webpack bundle when transpiles occur
+        await determineForcePackageLockUpdate(ethAdapterConfig);
 
     } else {
         console.log(`${colorBash.cyan}No update detected for artifacts or configuration - No compilation necessary\x1B[0m`);
