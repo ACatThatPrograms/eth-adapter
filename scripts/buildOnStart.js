@@ -18,8 +18,8 @@ export async function buildOnStart() {
 
     // Load eth-adapter config && check artifacts hash for differences
     let ethAdapterConfig = await loadConfig()
-    const artifactsHaveChanged = await compareArtifactHashes();
-    const configHasUpdated = await compareConfigHashes();
+    const artifactsHaveChanged = ethAdapterConfig ? await compareArtifactHashes() : false;
+    const configHasUpdated = ethAdapterConfig ? await compareConfigHashes() : false;
 
     if (artifactsHaveChanged) {
         console.log(`\x1B[1;33mArtifacts change detected -- Beginning transpile.\n\x1B[0m`);
