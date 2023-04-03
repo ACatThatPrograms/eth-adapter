@@ -17,10 +17,8 @@ export async function determineForcePackageLockUpdate(ethAdapterConfig) {
     // Determine if lockfile has webpack dependency
     let webpackIsDep = determineIsWebpackDependency(lockfileObj);    
     if (webpackIsDep) {
-        // console.log(`\n${colorBash.BG_red } WEBPACK Found ${colorBash.lblue} ${lockfileObj.type === "yarn" ? "yarn.lock" : "package-lock.json"}${colorBash.blue} will be used for force re-building webpack cache on new transpiles`)
-        // updateLockEntry(lockfileObj)
-        console.log(`\n${colorBash.BG_red } WEBPACK Found ${colorBash.lblue} ${lockfileObj.type === "yarn" ? "yarn.lock" : "webpack cache will be cleared after new transpiles"}`)
-        clearWebpackCache()
+        console.log(`\n${colorBash.BG_red } WEBPACK Found ${colorBash.lblue} ${lockfileObj.type === "yarn" ? "yarn.lock" : "webpack cache will be cleared after new transpiles to force a webpack bundle update"}`)
+        await clearWebpackCache()
     }
 
 }
@@ -55,6 +53,7 @@ async function clearWebpackCache() {
     }
 }
 
+/* -- Most likely deprecated -- TODO: Evaluate if needed for future
 async function updateLockEntry(lockfileObj) {
     
     let newLockEntry = {...lockfileObj.data}
@@ -73,7 +72,8 @@ async function updateLockEntry(lockfileObj) {
 
         await writeFile(process.cwd() + '/' + lockfileObj.type === "yarn" ? "yarn.lock" : "package-lock.json", Buffer.from(JSON.stringify(newLockEntry, false, 2)));
         
-    }
+}
+*/
 
 
 async function determineLockFileType() {

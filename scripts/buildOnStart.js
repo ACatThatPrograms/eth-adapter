@@ -22,7 +22,11 @@ export async function buildOnStart() {
     const configHasUpdated = ethAdapterConfig ? await compareConfigHashes() : false;
 
     if (artifactsHaveChanged) {
-        console.log(`\x1B[1;33mArtifacts change detected -- Beginning transpile.\n\x1B[0m`);
+        console.log(`\x1B[1;33mArtifacts ${configHasUpdated ? "and configuration" : ""} change detected -- Beginning transpile.\x1B[0m`);
+    }
+
+    if (configHasUpdated && !artifactsHaveChanged) {
+        console.log(`\x1B[1;33mConfig change detected -- Beginning transpile.\x1B[0m`);
     }
 
     if (ethAdapterConfig.alwaysCompile) {

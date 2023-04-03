@@ -97,7 +97,7 @@ export const requestAddressConfigUpdate = async () => {
             return await amendConfigFile();
         }
     } else {
-        console.log(`${colorBash.yellowB}NOTICE:${colorBash.yellow} Inbalance between artifacts & configuration file, amending...`)
+        console.log(`\n${colorBash.yellowB}NOTICE:${colorBash.yellow} Inbalance between artifacts & configuration file, amending...`)
         return await amendConfigFile();
     }
 }
@@ -130,7 +130,7 @@ export const amendConfigFile = async () => {
         let configObjectAddressKey = determineMatchingConfigAddressKeyFromArtifactFileName(configFile.contractAddresses,artifactFileName)
         // If key exists, config has entry for the address and should be re-used
         if (configObjectAddressKey) {
-            console.log(`${colorBash.lblue}Previous configuration found for ${configObjectAddressKey}, using address ${configFile.contractAddresses[configObjectAddressKey]} in amendment`)
+            console.log(`${colorBash.lblue}Previous configuration found for ${colorBash.magenta}${configObjectAddressKey}${colorBash.lblue}, using address ${colorBash.magenta}${configFile.contractAddresses[configObjectAddressKey]}${colorBash.lblue} in amendment`)
             ammendedContractAddressConfig[configObjectAddressKey] = configFile.contractAddresses[configObjectAddressKey];
             if (configObjectAddressKey.length > longestName) {
                 longestName = configObjectAddressKey.length;
