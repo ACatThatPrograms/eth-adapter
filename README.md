@@ -1,4 +1,4 @@
-# eth-adaper :electric_plug:
+# eth-adapter :electric_plug:
 
 Ethereum development made easier, interact with smart contracts instantly.
 
@@ -9,7 +9,8 @@ Ethereum development made easier, interact with smart contracts instantly.
 - Provided typed parameters for the generated functions based on your ABI:
 
 ![auto_complete_demo](https://raw.githubusercontent.com/ACatThatPrograms/eth-adapter/main/readme_img/auto_complete.png)
-#### Additionally: 
+#### Additionally
+
 - Exposes ethers on `ethAdapter.ethers` if you need it
 - Exposes all loaded contract configuration under `ethAdapter.contractConfig`
 
@@ -143,6 +144,10 @@ Will get an ethers read instance using the current provider of the CONTRACT_NAME
 Will get an ethers read instance using the current signer of the CONTRACT_NAME as noted in the .env
 
 `let storageInstance = await _getSignerContractInstance("STORAGE");`
+
+## Development & Additional Info
+
+Development of eth-adapter is slightly agaianst the grain as the package itself actually gets compiled on site, the package consists of mainly scripts and tooling to convert existing templates into a a customed eth adapter.
 
 ## Issues
 

@@ -1,6 +1,6 @@
 {
   "name": "eth-adapter",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "An ethereum adapter/transpiler to make interacting wirth smart contracts wicked simple",
   "type": "module",
   "main": "dist/cjs/index.cjs",
@@ -20,7 +20,7 @@
     "ethers": "5.7.2",
     "rollup": "^4.21.0",
     "tslib": "2.4.1",
-    "typescript": "4.8.4"
+    "typescript": "^4.9.5"
   },
   "bin": {
     "ethpst": "./bin/preStartTranspile.js",

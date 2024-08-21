@@ -76,7 +76,7 @@ export const loadConfig = async () => {
         if (ex.code === "ERR_MODULE_NOT_FOUND" || ex.message.indexOf("no such file") !== -1) {
             if (!configMissingWarningIssued) {
                 console.log(
-                    `\x1B[36mNo eth-adapter config found, a default config named "eth-adapter.config.json will be created\x1B[33m`
+                    `\x1B[36mNo eth-adapter config found, a default config named "eth-adapter.config.json" will be created\x1B[33m`
                 );
                 configMissingWarningIssued = true;
             }

@@ -11,7 +11,7 @@ const config = [
     {
         input: path.resolve(__dirname + "/src/index.ts"),
         output: [
-            // IMPORTANT: DO NOT MODIFY THIS ARRAY -- SEE scripts/distBuilder
+            // IMPORTANT: DO NOT MODIFY THIS ARRAY -- SEE scripts/createDist
             // Decisive dist building is based on the presence of the digesting package.json's "type" key -- see createDist in ./scripts
             {
                 file: path.resolve(__dirname + "/dist/es6/index.mjs"),

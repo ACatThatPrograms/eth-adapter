@@ -44,7 +44,7 @@ const removeDistFiles = async () => {
 
 const updateTypeLocationInPackage = async (isCommonJsModule) => {
     let ethAdapterPackageJson = JSON.parse(await fs.readFile(__dirname + "/../package.json"));
-    ethAdapterPackageJson.types = isCommonJsModule ? "dist/cjs/src/index.d.ts" : "dist/es6/src/index.d.ts"
+    ethAdapterPackageJson.types = isCommonJsModule ? "dist/cjs/index.d.ts" : "dist/es6/index.d.ts"
     await fs.writeFile(__dirname + "/../package.json", JSON.stringify(ethAdapterPackageJson, false, 2));
 }
 

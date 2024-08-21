@@ -4,8 +4,9 @@ yarn-error.log
 ## Env Parse
 .env
 
-## Custom Config
+## Custom Configs
 eth-adapter.config.json
+tsconfig.types.json
 
 ## Copied Artifacts
 artifacts

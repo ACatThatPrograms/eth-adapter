@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import { loadConfig } from './util/configHandling.js';
 import { colorBash } from './util/util.js';
 import { determineForcePackageLockUpdate } from './forcePackageLockUpdate.js';
+import { typeCreator } from './createTypes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -74,6 +75,18 @@ export async function buildOnStart() {
             return false
         }
 
+        // Lastly generate types via type generator if needed -- Deprecated, package.json updates types value for CJS/ES6 respectively
+        
+        /**
+        let typesGenerated = await typeCreator()
+        
+        if (!!typesGenerated.error) {
+            console.log("\n\x1B[31mError generating types:");
+            console.log(distRes.error)
+            return false
+        }
+        */
+            
         // If no dist error -- Write the latest hash for comparing
         await updateArtifactHash();
 
