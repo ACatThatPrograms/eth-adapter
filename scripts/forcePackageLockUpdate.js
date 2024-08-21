@@ -13,6 +13,7 @@ export async function determineForcePackageLockUpdate(ethAdapterConfig) {
     let lockfileObj = await findLockFile();
     if (lockfileObj.type === false) {
         console.log(`${colorBash.yellowB}Could not find package lockfile -- It may not exist.\nWebpack cache may not clear properly after transpile`)
+        return;
     }
     // Determine if lockfile has webpack dependency
     let webpackIsDep = determineIsWebpackDependency(lockfileObj);    
