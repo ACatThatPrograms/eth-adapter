@@ -93,14 +93,14 @@ async function extractConfigFromEnvironment() {
             }
             CONTRACT_NAMES[contractName] = contractName;
             CONTRACT_ADDRESSES[contractName] = process.env[environmentKey];
-            let abi = setAndReturnAbiForContract(contractName);
+            let abi = await setAndReturnAbiForContract(contractName);
             setContractsConfig(contractName, process.env[environmentKey], abi);
         }
     }
     return true;
 }
 
-// Extract configuration addresses from config file
+// Extract configuration addresses from config file -- TODO: Unused, cleanup?
 async function extractConfigFromConfigFile(configFile) {
     let contractAddressNameKeys = Object.keys(configFile.contractAddresses);
     for (let i = 0; i < contractAddressNameKeys.length; i++) {
