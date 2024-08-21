@@ -57,11 +57,7 @@ export const generateDefaultConfig = async (passive) => {
     // Write the file
     await writeConfigFile(newConfig);
     console.log(
-        `\n\x1B[0;32mSuccessfully wrote new config file to ${process.cwd() + "/" + configFileName} ${
-            !requestAddresses
-                ? "\n\n\x1B[1;33mRemember to fill out the contract addresses in the newly created file before running the transpiler\n"
-                : "\n"
-        }`
+        `\n\x1B[0;32mSuccessfully wrote new config file to ${process.cwd() + "/" + configFileName}`
     );
     return newConfig;
 };
