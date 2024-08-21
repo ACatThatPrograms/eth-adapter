@@ -21,10 +21,14 @@ const determineProcessToRun = () => {
 dotenv.config();
 let success = await buildOnStart();
 console.log(`\n${colorBash.lcyan}Eth Pre-Start Transpilation (ethpst): Success? => ${success ? colorBash.greenB : colorBash.redB} ${success}${colorBash.reset}`);
-console.log(`\n${colorBash.cyan}Resuming...${colorBash.reset}\n`)
 rl.close();
 if (success) {
     let [cmd, args] = determineProcessToRun();
+    if (typeof cmd === 'undefined') {
+        console.log(`\n${colorBash.cyan}No post ethpst command found. Add additional commands after "ethpst" to run them after the script. Such as "ethpst npm run build" ${colorBash.reset}\n`)
+        process.exit();
+    }
+    console.log(`\n${colorBash.cyan}Resuming...${colorBash.reset}`)
     const procRunner= spawn(cmd, args)
     procRunner.stdout.on("data", (chunk) => {
         process.stdout.write(chunk)

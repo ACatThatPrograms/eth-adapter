@@ -8,7 +8,7 @@ import { ETHEREUM_NETWORK_BY_ID } from "./network";
 import { ethers, Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { CONTRACT_CONFIG as CONTRACT_CONFIGURATION } from "./config";
-import * as types from "../../@types"; // Required when transpiled to customEthAdapter after method addition
+import * as types from "../@types"; // Required when transpiled to customEthAdapter after method addition
 
 // Allow window.ethereum
 declare global {

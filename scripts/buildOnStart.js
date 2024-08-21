@@ -8,7 +8,7 @@ const sleeper = (amt) => ((new Promise(res => setTimeout(res, amt))));
 // Es6 Path resolve
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { loadConfig, requestAddressConfigUpdate } from './util/configHandling.js';
+import { loadConfig } from './util/configHandling.js';
 import { colorBash } from './util/util.js';
 import { determineForcePackageLockUpdate } from './forcePackageLockUpdate.js';
 const __filename = fileURLToPath(import.meta.url);
@@ -30,15 +30,11 @@ export async function buildOnStart() {
     }
 
     if (ethAdapterConfig.alwaysCompile) {
-        console.log(`${colorBash.yellowB}"alwaysCompile" detected\n${colorBash.yellow}- You can limit transpilation to artifact or configuration updates by setting alwaysCompile to false\x1B[33m\n`);
+        console.log(`${colorBash.yellowB}"alwaysCompile" detected\n${colorBash.yellow}- You can limit transpilation to artifact or configuration updates by setting alwaysCompile to false\x1B[33m`);
     }
 
-    if (artifactsHaveChanged || configHasUpdated || ethAdapterConfig.alwaysCompile) {
-
-        if (!!ethAdapterConfig && artifactsHaveChanged) {
-            let newConf = await requestAddressConfigUpdate()
-            ethAdapterConfig = newConf ? newConf : ethAdapterConfig;
-        }
+    // If eth adapater config doesn't exist, this segement must run regardless of 
+    if (ethAdapterConfig === false || (artifactsHaveChanged || configHasUpdated || ethAdapterConfig.alwaysCompile)) {
 
         console.log(`\n${colorBash.yellowB}=====================================`)
         console.log("========= TRANSPILER  START =========")

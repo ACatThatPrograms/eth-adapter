@@ -1,8 +1,8 @@
-import fs from 'fs/promises';
-import ethers from 'ethers'
-import path from 'path';
-import { loadConfig, writeConfigFile } from './configHandling.js';
-import { colorBash } from './util.js';
+import fs from "fs/promises";
+import ethers from "ethers";
+import path from "path";
+import { generateDefaultConfig, loadConfig, writeConfigFile } from "./configHandling.js";
+import { colorBash } from "./util.js";
 
 /**
  * Gets freshly generated artifact and config hashes and returns them as an object
@@ -10,7 +10,7 @@ import { colorBash } from './util.js';
 export async function generateArtifactsAndConfigHash() {
     return {
         artifactsHash: await generateArtifactHashFromArtifacts(),
-        configHash: await generateConfigHashFromConfig()
+        configHash: await generateConfigHashFromConfig(),
     };
 }
 
@@ -19,10 +19,10 @@ export async function generateArtifactsAndConfigHash() {
  */
 export async function generateArtifactHashFromArtifacts() {
     const allFilesHashes = [];
-    const artifactDirFiles = await fs.readdir(path.resolve(process.cwd() + '/artifacts'))
+    const artifactDirFiles = await fs.readdir(path.resolve(process.cwd() + "/artifacts"));
     for (const filename of artifactDirFiles) {
-        let artifactRead = (await fs.readFile(path.resolve(process.cwd() + '/artifacts/' + filename)));
-        allFilesHashes.push(ethers.utils.keccak256(artifactRead))
+        let artifactRead = await fs.readFile(path.resolve(process.cwd() + "/artifacts/" + filename));
+        allFilesHashes.push(ethers.utils.keccak256(artifactRead));
     }
     const joinedFileHash = ethers.utils.keccak256(Buffer.from(allFilesHashes.join("")));
     return joinedFileHash;
@@ -43,10 +43,10 @@ export async function generateConfigHashFromConfig() {
 export async function compareArtifactHashes() {
     try {
         let hashAsStored = (await loadConfig()).hashes.artifacts;
-        let artifactsHash = await generateArtifactHashFromArtifacts()
-        return hashAsStored !== artifactsHash
+        let artifactsHash = await generateArtifactHashFromArtifacts();
+        return hashAsStored !== artifactsHash;
     } catch (ex) {
-        throw(ex);
+        throw ex;
     }
 }
 
@@ -57,9 +57,9 @@ export async function compareConfigHashes() {
     try {
         let hashAsStored = (await loadConfig()).hashes.config;
         let configHash = await generateConfigHashFromConfig();
-        return hashAsStored !== configHash
+        return hashAsStored !== configHash;
     } catch (ex) {
-        throw(ex);
+        throw ex;
     }
 }
 
@@ -68,7 +68,7 @@ export async function compareConfigHashes() {
  * This will in turn call updateConfigHash() due to the change in the hash tree
  */
 export async function updateArtifactHash() {
-    const artifactsHash = await generateArtifactHashFromArtifacts()
+    const artifactsHash = await generateArtifactHashFromArtifacts();
     // Anytime the artifactsHash is updated the config hash must also be recalculated based on it
     return await updateConfigHash(artifactsHash);
 }
@@ -78,15 +78,25 @@ export async function updateArtifactHash() {
  * -- Pass precomputedArtifactHash to use the precompute hash in the config hash generation
  */
 export async function updateConfigHash(preComputedArtifactHash) {
-    let newConfig = {...(await loadConfig())}
+    let newConfig = { ...(await loadConfig()) };
+    if (Object.keys(newConfig).length === 0) {
+        console.warn(
+            `\n\x1B[1;33mNew default config being generated to use for hash comparison -- You can create a new config by running ethinit at any time.\x1B[0m`
+        );
+        newConfig = await generateDefaultConfig(true)
+    }
     // Set config hash to "" for hashing
     newConfig.hashes.config = "";
     // Only update artifacts hash if passed in, else assume it has not changed
     if (preComputedArtifactHash) {
         newConfig.hashes.artifacts = preComputedArtifactHash;
     }
-    let configHash = ethers.utils.keccak256(Buffer.from(JSON.stringify(newConfig)))
-    newConfig.hashes.config = configHash; 
+    let configHash = ethers.utils.keccak256(Buffer.from(JSON.stringify(newConfig)));
+    newConfig.hashes.config = configHash;
     await writeConfigFile(newConfig);
-    console.log(`${colorBash.cyan}Successfully updated the ${preComputedArtifactHash ? `${colorBash.cyanB}artifact${colorBash.cyan} and ` : ""}${colorBash.cyanB}configuration${colorBash.cyan} hashes`)
+    console.log(
+        `${colorBash.cyan}Successfully updated the ${
+            preComputedArtifactHash ? `${colorBash.cyanB}artifact${colorBash.cyan} and ` : ""
+        }${colorBash.cyanB}configuration${colorBash.cyan} hashes`
+    );
 }

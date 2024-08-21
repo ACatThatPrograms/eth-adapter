@@ -1,6 +1,5 @@
 // Contents of the file /rollup.config.js
-import typescript from "rollup-plugin-typescript2";
-import nodeResolve from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
 
 // Es6 Path resolve
 import path from "path";
@@ -28,7 +27,9 @@ const config = [
             // },
         ],
         external: ["ethers"],
-        plugins: [nodeResolve(), typescript({ tsconfig: path.resolve(__dirname) + "/tsconfig.json" })],
+        plugins: [
+            typescript({ tsconfig: path.resolve(__dirname) + "/tsconfig.json", include: ["**/*.ts", "**/*.tsx"] }),
+        ],
     },
 ];
 export default config;

@@ -41,25 +41,14 @@ export async function buildContractConfig() {
 
     if (!hasEnvContractVariables && !ethAdapterConfig) {
         console.error(
-            "\x1B[1;31meth-adapter: No config file or environment file CONTRACT_ADDRESS entries found\n\n\x1B[0;31mA .env with n CONTRACT_ADDRESS where n=artifactFileCount is required.\nA configuration file is recommended to support all features\nRun \x1B[0;33mnpx ethinit\x1B[0;31m to generate a new configuration file.\n\nPlease read documentation @ https://www.npmjs.com/package/eth-adapter\n"
+            "\x1B[1;31meth-adapter: No .env config found\n\n\x1B[0;31mA .env with n CONTRACT_ADDRESS where n=artifactFileCount is required.\n\nPlease read documentation @ https://www.npmjs.com/package/eth-adapter\n"
         );
         return false;
     }
 
-    // Use env variables if only env available
-    if (hasEnvContractVariables && !ethAdapterConfig) {
+    // Use env variables to get contract addresses
+    if (hasEnvContractVariables) {
         contractConfigConstructionSuccess = await extractConfigFromEnvironment();
-    }
-
-    if (!!ethAdapterConfig && hasEnvContractVariables) {
-        console.error(
-            `${colorBash.BG_redB} ~~ ALERT ~~${colorBash.lred}\n${await checkContractEnvCount()} .env CONTRACT_ADDRESS entries detected alongside configuration file\nPlease remove all CONTRACT_ADDRESS entries when using ${configFileName}\n`
-        );
-    }
-
-    // Use config
-    if (!!ethAdapterConfig) {
-        contractConfigConstructionSuccess = await extractConfigFromConfigFile(ethAdapterConfig);
     }
 
     // If contract config construction failed -- return false;
@@ -72,7 +61,7 @@ export async function buildContractConfig() {
     // output += `\nexport default CONTRACT_CONFIG;`;
     await fs.writeFile(__dirname + "/../src/adapter/config.ts", output, "utf8");
     console.log(
-        `\n\x1B[0;32mContract Config Successfully Parsed to ES6 Syntax at:\n${colorBash.cyan}${path.resolve(
+        `\x1B[0;32mContract Config Successfully Parsed to ES6 Syntax at:\n${colorBash.cyan}${path.resolve(
             __dirname + "/../src/adapter/config.ts"
         )}\n\x1B[0m`
     );
@@ -94,7 +83,7 @@ async function extractConfigFromEnvironment() {
             // If file derived contract name does not exist, this means a user did not name .env KEYs the same as the artifacts/FILENAMES -- They must match
             if (!contractNames[contractName]) {
                 console.warn(
-                    `\n\x1B[1;33mCritical Contract Config Issue -- Please Read Below -- Aborting ETHPST transpilation.\x1B[0m`
+                    `\n\x1B[1;33mCritical Contract Config Issue -- DOUBLE CHECK YOUR .ENV FILE -- Please Read Below -- Aborting ETHPST transpilation.\x1B[0m`
                 );
                 console.warn(
                     `\n\x1B[0;33mA CONTRACTNAME derived from artifacts the directory ('./artifacts/<CONTRACTNAME>.json') !== CONTRACTNAME derived from the .env environment\nCONTRACTNAME derived from .env: ${contractName}\n\nFor Example: When using artifacts/Storage.json .env should have STORAGE_CONTRACT_ADDRESS=<ADDRESS>.\n\nThis warning can also throw if you have an inbalance of artifact files to .env key entries\nIf you have 4 Artifact files you should have 4 respective enviroment keys:value pairs\x1B[0m\n`

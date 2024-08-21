@@ -17,7 +17,7 @@ export async function determineForcePackageLockUpdate(ethAdapterConfig) {
     // Determine if lockfile has webpack dependency
     let webpackIsDep = determineIsWebpackDependency(lockfileObj);    
     if (webpackIsDep) {
-        console.log(`\n${colorBash.BG_red } WEBPACK Found ${colorBash.lblue} ${lockfileObj.type === "yarn" ? "yarn.lock" : "webpack cache will be cleared after new transpiles to force a webpack bundle update"}`)
+        console.log(`\n${colorBash.BG_red }WEBPACK Dependency Found${colorBash.lblue} ${lockfileObj.type === "yarn" ? "yarn.lock" : "webpack cache will be cleared after new transpiles to force a webpack bundle update"}`)
         await clearWebpackCache()
     }
 
@@ -34,7 +34,14 @@ async function determineIsWebpackDependency(lockfileObj) {
 
 async function clearWebpackCache() {
     const cwdNodeCacheDir = process.cwd() + "/node_modules/.cache"
-    const cacheFolders = await readdir(cwdNodeCacheDir);
+    let cacheFolders = [];
+
+    try {
+        cacheFolders = await readdir(cwdNodeCacheDir);
+    } catch (ex) {
+        console.log(`\n${colorBash.yellow}WEBPACK cache folder not found, skipping webpack cache force\n-- We are currently checking: ${colorBash.yellowB}${cwdNodeCacheDir}${colorBash.yellow}\n!! If this is incorrect, please file a bug report.`)
+        return;
+    }
 
     // Id the target cache files of node_modules/.cache to remove
     // Newly transpiled code will not be in the webpack bundle if node_modules updates without cache being rebuilt

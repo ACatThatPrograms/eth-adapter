@@ -8,10 +8,11 @@
       "declaration": true,
       "strict": false,
       "module": "ESNext",
-      "noEmitOnError": true,
+      "noEmitOnError": false,
       "lib": ["es2017", "DOM"],
-      "esModuleInterop": false,
+      "esModuleInterop": true,
+      "rootDir": "src"
     },
-    "include": ["src"],
+    "include": ["src/**/*.ts"],
     "exclude": ["src/adapter/ethAdapter.ts"],
   }
