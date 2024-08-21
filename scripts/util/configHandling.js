@@ -32,11 +32,6 @@ export const generateDefaultConfig = async (passive) => {
             \n\x1B[36mNo artifacts detected; You should add contract artifacts to /artifacts prior to running \x1B[33mnpx ethinit\x1B[33m
         `);
     }
-    // Should we request contract addresses for config?
-    let reqAdrs = passive
-        ? "n"
-        : await rl.question("\x1B[1;35m\nFill out the deployed addresses for contracts now? y|n (Enter for no): ");
-    const requestAddresses = reqAdrs === "y" || reqAdrs === "Y";
     // Inject artifactFiles contract name skeleton and request addresses if necessary
     let invCount = 0;
     const askForAddress = async (filename, wasWrong = false) => {

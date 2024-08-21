@@ -7,10 +7,7 @@
   "types": "dist/es6/src/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "rollup -c",
     "clean-generated": "rm -r ./dist eth-adapter.config.json ./src/adapter/abis.ts ./src/adapter/config.ts ./src/adapter/contractNames.ts ./src/adapter/customEthAdapter.ts",
-    "develop": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "ethpst": "node ./bin/preStartTranspile.js",
     "ethinit": "node ./bin/generateConfig.js"
   },
